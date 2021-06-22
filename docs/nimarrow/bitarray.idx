@@ -1,0 +1,10 @@
+Units	nimarrow/bitarray.html#Units	bitarray: Units	
+BitVector	nimarrow/bitarray.html#BitVector	bitarray: BitVector	
+newBitVector	nimarrow/bitarray.html#newBitVector,int,int	bitarray: newBitVector[T](size: int; init = 0): BitVector[T]	
+`[]`	nimarrow/bitarray.html#[],BitVector[T],int	bitarray: `[]`[T](b: BitVector[T]; i: int): Bit	
+`[]=`	nimarrow/bitarray.html#[]=,BitVector[T],int,Bit	bitarray: `[]=`[T](b: var BitVector[T]; i: int; value: Bit)	
+add	nimarrow/bitarray.html#add,BitVector[T],Bit	bitarray: add[T](b: var BitVector[T]; value: Bit)	
+cap	nimarrow/bitarray.html#cap,BitVector[T]	bitarray: cap[T](b: BitVector[T]): int	
+len	nimarrow/bitarray.html#len,BitVector[T]	bitarray: len[T](b: BitVector[T]): int	
+`==`	nimarrow/bitarray.html#==,BitVector,BitVector	bitarray: `==`(x, y: BitVector): bool	
+`$`	nimarrow/bitarray.html#$,BitVector[T]	bitarray: `$`[T](b: BitVector[T]): string	

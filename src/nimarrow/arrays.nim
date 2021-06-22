@@ -6,17 +6,12 @@ import nimarrow_glib
 import ./bitarray
 
 type
-  ## A 1d array of type T. Data is owned by the object and stored 
-  ## on heap, to be freed when this object is destroyed. In the 
-  ## case this array is a slice of another array, it does not
-  ## own its data and will not free any data on destruction.
-  ArrowArray*[T] = object 
-    data: WrappedBufferPtr  ## Buffer of the underlying memory backing this 
-                            ## array. If nil, then this array is a slice of
-                            ## another array and no data is owned.
-    nullBitmap: WrappedBufferPtr # Buffer of the null bitmap, can be nil.
-    glibArray: GArrowArrayPtr  ## g_object holding the arrow array
-                               ## metadata. Freed on destruction.
+  ArrowArrayInternal[T] = object 
+    data: WrappedBufferPtr
+    nullBitmap: WrappedBufferPtr
+    glibArray: GArrowArrayPtr
+
+  ArrowArray*[T] = ref ArrowArrayInternal[T]  
   
   NullBitmapBase = uint32
   NullBitmap* = BitVector[NullBitmapBase]
@@ -29,7 +24,7 @@ type
 
   WrappedBufferPtr = ref WrappedBuffer
 
-proc `=destroy`*[T](x: var ArrowArray[T]) =    
+proc `=destroy`*[T](x: var ArrowArrayInternal[T]) =    
   if x.glibArray != nil:
     gObjectUnref(x.glibArray)  
     
@@ -103,21 +98,32 @@ proc newArrowArray[T](data: WrappedBufferPtr, nullBitmap: WrappedBufferPtr,
   construct[T](result, data.length, data.buf, nullBitmap.buf, nNulls)
 
 proc newEmptyArrowArray*[T](): ArrowArray[T] =
+  ## Constructs a new empty arrow array of type T.
   newArrowArray[T](emptyBuffer(), emptyBuffer(), 0)
 
 proc newArrowArray*[T](data: openArray[T]): ArrowArray[T] =
+  ## Constructs a new arrow array of type T filled with `data`. Note, this
+  ## creates a copy of `data` into a new internal buffer. For non-copying
+  ## array construction, use an ArrowArrayBuilder[T].
   let data = copyToBuffer(data)  
   newArrowArray[T](data, emptyBuffer(), 0)
 
 proc newArrowArray*[T](data: openArray[Option[T]]): ArrowArray[T]  
+  ## Constructs a new arrow array of type T filled with `data`. Treats
+  ## `none(T)` as null. Note, this creates a copy of `data` into a new
+  ## internal buffer. For non-copying array construction, use 
+  ## an ArrowArrayBuilder[T].
 
 proc len*[T](arr: ArrowArray[T]): int64 =
+  ## Returns the length of the arrow array.
   arrayGetLength(arr.glibArray)
 
 proc isNullAt*[T](arr: ArrowArray[T], i: int64): bool =
+  ## Returns true when the ith element of the array is null.
   arrayIsNull(arr.glibArray, i)  
 
 proc `@`*[T](arr: ArrowArray[T]): seq[T] =
+  ## Converts the arrow array into a seq[T] (creates a copy).
   let length = arr.len
   var valuesRead: int64
   let values = arr.getValues(valuesRead)
@@ -127,6 +133,7 @@ proc `@`*[T](arr: ArrowArray[T]): seq[T] =
     result.add values[i]
 
 proc `$`*[T](arr: ArrowArray[T]): string =
+  ## Returns the string representation of the array.
   var err: GErrorPtr
   let arrString = arrayToString(arr.glibArray, err)    
   if err != nil:
@@ -137,18 +144,29 @@ proc `$`*[T](arr: ArrowArray[T]): string =
     gfree(arrString)
 
 proc `[]`*[T](arr: ArrowArray[T], i: int64): T =   
+  ## Gets the ith element of the array. Note that null values will
+  ## be returned as 0, so `isNullAt` should be checked first if
+  ## the array may have null values.
   arr.getValue(i)
 
-proc `[]`*[T](arr: ArrowArray[T], bounds: Slice[int]): ArrowArray[T] =
-  arr[int64(bounds.a) .. int64(bounds.b)]
+proc `[]`*[T](arr: ArrowArray[T], i: int): T =     
+  ## Gets the ith element of the array. Note that null values will
+  ## be returned as 0, so `isNullAt` should be checked first if
+  ## the array may have null values.    
+  arr[int64(i)]
 
-proc `[]`*[T](arr: ArrowArray[T], bounds: Slice[int64]): ArrowArray[T] =
+proc `[]`*[T](arr: ArrowArray[T], slice: Slice[int]): ArrowArray[T] =
+  ## Returns a slice of this array for the given range.    
+  arr[int64(slice.a) .. int64(slice.b)]
+
+proc `[]`*[T](arr: ArrowArray[T], slice: Slice[int64]): ArrowArray[T] =
+  ## Returns a slice of this array for the given range.    
   let length = arr.len
-  doAssert(bounds.a >= 0 and bounds.a < length and bounds.b >= 0 and 
-           bounds.b < length and bounds.a <= bounds.b)
+  doAssert(slice.a >= 0 and slice.a < length and slice.b >= 0 and 
+           slice.b < length and slice.a <= slice.b)
   
-  let sliceLength = bounds.b - bounds.a  
-  let slice = arraySlice(arr.glibArray, bounds.a, sliceLength)
+  let sliceLength = slice.b - slice.a  
+  let slice = arraySlice(arr.glibArray, slice.a, sliceLength)
 
   ArrowArray(
     glibArray: slice,
@@ -157,6 +175,7 @@ proc `[]`*[T](arr: ArrowArray[T], bounds: Slice[int64]): ArrowArray[T] =
   )
 
 type
+  ## Supports building an array by adding one element at a time.
   ArrowArrayBuilderObj[T] = object
     data: ptr UncheckedArray[T]
     nullBitmap: NullBitmap    
@@ -172,6 +191,7 @@ proc `=destroy`*[T](builder: var ArrowArrayBuilderObj[T]) =
     dealloc(builder.data)
 
 proc newArrowArrayBuilder*[T](): ArrowArrayBuilder[T] =
+  ## Construct a new empty array builder.    
   ArrowArrayBuilder[T](
     data: nil,
     nullBitmap: newBitVector[NullBitmapBase](0),
@@ -182,7 +202,8 @@ proc newArrowArrayBuilder*[T](): ArrowArrayBuilder[T] =
   )
 
 proc reserve*[T](builder: ArrowArrayBuilder[T], maxSize: int64) =
-  assert(builder.valid)
+  ## Reserve `maxSize` elements in the array's buffer.    
+  doAssert(builder.valid)
   
   let minSize = int64(64 / sizeof(T))
   let newBytes = max(minSize, maxSize) * sizeof(T)
@@ -194,18 +215,21 @@ proc reserve*[T](builder: ArrowArrayBuilder[T], maxSize: int64) =
   builder.cap = maxSize
 
 proc ensureCap[T](builder: ArrowArrayBuilder[T]) =
+  doAssert(builder.valid)
   if builder.length == builder.cap:
     builder.reserve(min(2, builder.cap * 2))
 
 proc add*[T](builder: ArrowArrayBuilder[T], x: T) =
-  assert(builder.valid)
+  ## Add the element to the array.    
+  doAssert(builder.valid)
   ensureCap(builder)
   builder.data[builder.length] = x
   builder.nullBitmap.add 1
   builder.length += 1
 
 proc add*[T](builder: ArrowArrayBuilder[T], x: Option[T]) =
-  assert(builder.valid)
+  ## Add a value or null to the array, none(T) is treated as null.    
+  doAssert(builder.valid)
   ensureCap(builder)
 
   if x.isSome:
@@ -219,19 +243,24 @@ proc add*[T](builder: ArrowArrayBuilder[T], x: Option[T]) =
   builder.length += 1  
 
 proc build*[T](builder: ArrowArrayBuilder[T]): ArrowArray[T] =
+  ## Construct an arrow array from the builder's buffer. This does NOT
+  ## create a copy of the data, and instead transfers ownership of the
+  ## internal buffer to the array. After this is called, the builder
+  ## is no longer valid and cannto be mutated.    
   let bytes = builder.cap * sizeof(T)  
   let buf = WrappedBufferPtr(
     raw: builder.data,
     buf: bufferNew(builder.data, bytes),
     bytes: bytes,
-    length: builder.length
-  )
+    length: builder.length)
   let nullBitmapBuf = copyToBuffer(builder.nullBitmap.base)
   result = newArrowArray[T](buf, nullBitmapBuf, builder.nNulls)
   builder.valid = false
   builder.data = nil
 
 proc newArrowArray*[T](data: openArray[Option[T]]): ArrowArray[T] =
+  ## Construct an arrow array from elements which may be null, none(T)
+  ## is treated as null.    
   let builder = newArrowArrayBuilder[T]()
   for x in data:
     builder.add x

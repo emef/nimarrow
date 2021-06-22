@@ -31,7 +31,7 @@ func `[]`*[T](b: BitVector[T], i: int): Bit {.inline.} =
   assert(i < b.cap and i >= 0, "Index out of range")
   b.base[i div (T.sizeof * 8)] shr (i and (T.sizeof * 8 - 1)) and 1
 
-proc `[]=`*[T](b: var BitVector[T], i: int, value: Bit) {.inline.} =
+func `[]=`*[T](b: var BitVector[T], i: int, value: Bit) {.inline.} =
   assert(i < b.cap and i >= 0, "Index out of range")
   var w = addr b.base[i div (T.sizeof * 8)]
   if value == 0:
@@ -40,6 +40,7 @@ proc `[]=`*[T](b: var BitVector[T], i: int, value: Bit) {.inline.} =
     w[] = w[] or (1.T shl (i and (T.sizeof * 8 - 1)))
 
 func add*[T](b: var BitVector[T], value: Bit) {.inline.} =
+  ## Add an element to the end of the BitVector.
   let i = b.bitlength  
   if (i div (T.sizeof * 8)) > b.base.len():
     b.base.add 0.T
