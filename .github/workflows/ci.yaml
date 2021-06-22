@@ -1,0 +1,30 @@
+name: nimarrow CI
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: nimarrow
+
+    - name: Install build dependencies
+      run: |
+        sudo dpkg --add-architecture i386        
+        sudo apt-fast install -y -V ca-certificates lsb-release wget
+        wget https://apache.jfrog.io/artifactory/arrow/$(lsb_release --id --short | tr 'A-Z' 'a-z')/apache-arrow-apt-source-latest-$(lsb_release --codename --short).deb
+        sudo apt-fast install -y -V ./apache-arrow-apt-source-latest-$(lsb_release --codename --short).deb
+        sudo apt-fast update -qq
+        sudo DEBIAN_FRONTEND='noninteractive' apt-fast install \
+          --no-install-recommends -yq libarrow-glib-dev libparquet-glib-dev        
+        wget https://nim-lang.org/download/nim-1.4.8-linux_x64.tar.xz
+        tar xf nim-1.4.8-linux_x64.tar.xz         
+        echo '${{ github.workspace }}/nim-1.4.8/bin' >> $GITHUB_PATH
+    
+    - name: Run nimarrow tests
+      shell: bash
+      working-directory: nimarrow
+      run: |
+        nimble install -y --depsOnly
+        nimble test
