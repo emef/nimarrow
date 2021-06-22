@@ -5,6 +5,31 @@ import nimarrow_glib
 
 import ./bitarray
 
+## An ArrowArray[T] is simply a 1D array of type T. It manages its
+## own data on the heap in 64byte-aligned buffers to interop with
+## the libarrow-glib c API.
+runnableExamples:
+  import options
+  let arr = newArrowArray[int32](@[1'i32, 2'i32, 3'i32])
+  doAssert arr[0] == 1'i32
+  doAssert @arr == @[1'i32, 2'i32, 3'i32]
+ 
+  # can take a slice of an existing array, returning a view (no copy).
+  let s = arr[1..3]
+  doAssert @s == @[2'i32, 3'i32]
+ 
+  # use array builders to avoid creating a copy of the data, .build()
+  # transfers ownership of its buffer into the newly-created array.
+  let builder = newArrowArrayBuilder[int64]()
+  builder.add 1'i64
+  builder.add 2'i64
+  builder.add none(int64)
+  let withNulls = builder.build()
+   
+  # nulls show up as 0, must check isNullAt(i)
+  doAssert @withNulls == @[1'i64, 2'i64, 0'i64]
+  doAssert withNulls.isNullAt(2)
+
 type
   ArrowArrayInternal[T] = object 
     data: WrappedBufferPtr
@@ -93,6 +118,7 @@ DeclareNumericArray(float64, double)
 
 proc newArrowArray[T](data: WrappedBufferPtr, nullBitmap: WrappedBufferPtr, 
                       nNulls: int64): ArrowArray[T] =
+  result = new(ArrowArray[T])                 
   result.data = data
   result.nullBitmap = nullBitmap
   construct[T](result, data.length, data.buf, nullBitmap.buf, nNulls)
@@ -163,16 +189,12 @@ proc `[]`*[T](arr: ArrowArray[T], slice: Slice[int64]): ArrowArray[T] =
   ## Returns a slice of this array for the given range.    
   let length = arr.len
   doAssert(slice.a >= 0 and slice.a < length and slice.b >= 0 and 
-           slice.b < length and slice.a <= slice.b)
+           slice.b <= length and slice.a <= slice.b)
   
   let sliceLength = slice.b - slice.a  
   let slice = arraySlice(arr.glibArray, slice.a, sliceLength)
 
-  ArrowArray(
-    glibArray: slice,
-    getValue: arr.getValue,
-    getValues: arr.getValues
-  )
+  ArrowArray[T](glibArray: slice)
 
 type
   ## Supports building an array by adding one element at a time.
@@ -198,8 +220,7 @@ proc newArrowArrayBuilder*[T](): ArrowArrayBuilder[T] =
     length: 0,
     cap: 0,
     nNulls: 0,
-    valid: true
-  )
+    valid: true)
 
 proc reserve*[T](builder: ArrowArrayBuilder[T], maxSize: int64) =
   ## Reserve `maxSize` elements in the array's buffer.    

@@ -196,7 +196,28 @@ function main() {
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
   
-  <p class="module-desc"></p>
+  <p class="module-desc">An ArrowArray[T] is simply a 1D array of type T. It manages its own data on the heap in 64byte-aligned buffers to interop with the libarrow-glib c API.
+<p><strong class="examples_text">Example:</strong></p>
+<pre class="listing"><span class="Keyword">import</span><span class="Whitespace"> </span><span class="Identifier">options</span><span class="Whitespace">
+</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">arr</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowArray</span><span class="Punctuation">[</span><span class="Identifier">int32</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Operator">@</span><span class="Punctuation">[</span><span class="DecNumber">1&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">2&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">3&apos;i32</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Whitespace">
+</span><span class="Identifier">doAssert</span><span class="Whitespace"> </span><span class="Identifier">arr</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Whitespace"> </span><span class="Operator">==</span><span class="Whitespace"> </span><span class="DecNumber">1&apos;i32</span><span class="Whitespace">
+</span><span class="Identifier">doAssert</span><span class="Whitespace"> </span><span class="Operator">@</span><span class="Identifier">arr</span><span class="Whitespace"> </span><span class="Operator">==</span><span class="Whitespace"> </span><span class="Operator">@</span><span class="Punctuation">[</span><span class="DecNumber">1&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">2&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">3&apos;i32</span><span class="Punctuation">]</span><span class="Whitespace">
+
+</span><span class="Comment"># can take a slice of an existing array, returning a view (no copy).</span><span class="Whitespace">
+</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">s</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">arr</span><span class="Punctuation">[</span><span class="FloatNumber">1.</span><span class="Operator">.</span><span class="DecNumber">3</span><span class="Punctuation">]</span><span class="Whitespace">
+</span><span class="Identifier">doAssert</span><span class="Whitespace"> </span><span class="Operator">@</span><span class="Identifier">s</span><span class="Whitespace"> </span><span class="Operator">==</span><span class="Whitespace"> </span><span class="Operator">@</span><span class="Punctuation">[</span><span class="DecNumber">2&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">3&apos;i32</span><span class="Punctuation">]</span><span class="Whitespace">
+
+</span><span class="Comment"># use array builders to avoid creating a copy of the data, .build()</span><span class="Whitespace">
+</span><span class="Comment"># transfers ownership of its buffer into the newly-created array.</span><span class="Whitespace">
+</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">builder</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowArrayBuilder</span><span class="Punctuation">[</span><span class="Identifier">int64</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Whitespace">
+</span><span class="Identifier">builder</span><span class="Operator">.</span><span class="Identifier">add</span><span class="Whitespace"> </span><span class="DecNumber">1&apos;i64</span><span class="Whitespace">
+</span><span class="Identifier">builder</span><span class="Operator">.</span><span class="Identifier">add</span><span class="Whitespace"> </span><span class="DecNumber">2&apos;i64</span><span class="Whitespace">
+</span><span class="Identifier">builder</span><span class="Operator">.</span><span class="Identifier">add</span><span class="Whitespace"> </span><span class="Identifier">none</span><span class="Punctuation">(</span><span class="Identifier">int64</span><span class="Punctuation">)</span><span class="Whitespace">
+</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">withNulls</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">builder</span><span class="Operator">.</span><span class="Identifier">build</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Whitespace">
+ 
+</span><span class="Comment"># nulls show up as 0, must check isNullAt(i)</span><span class="Whitespace">
+</span><span class="Identifier">doAssert</span><span class="Whitespace"> </span><span class="Operator">@</span><span class="Identifier">withNulls</span><span class="Whitespace"> </span><span class="Operator">==</span><span class="Whitespace"> </span><span class="Operator">@</span><span class="Punctuation">[</span><span class="DecNumber">1&apos;i64</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">2&apos;i64</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">0&apos;i64</span><span class="Punctuation">]</span><span class="Whitespace">
+</span><span class="Identifier">doAssert</span><span class="Whitespace"> </span><span class="Identifier">withNulls</span><span class="Operator">.</span><span class="Identifier">isNullAt</span><span class="Punctuation">(</span><span class="DecNumber">2</span><span class="Punctuation">)</span></pre></p>
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
@@ -374,7 +395,7 @@ Constructs a new arrow array of type T filled with <tt class="docutils literal">
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-06-22 03:50:29 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-06-22 04:26:08 UTC</small>
       </div>
     </div>
   </div>
