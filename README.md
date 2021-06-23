@@ -13,7 +13,7 @@
 This library is still a WIP and will be developed alongside the [nimarrow_glib](https://github.com/emef/nimarrow_glib/) library which exposes the libarrow-glib c API.
 
 - [x] arrays
-- [ ] date/timestamp types
+- [ ] date/timestamp/decimal types
 - [ ] tables
 - [ ] parquet read/write
 - [ ] IPC format
