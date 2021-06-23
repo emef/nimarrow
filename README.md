@@ -1,4 +1,4 @@
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) ![Stability](https://img.shields.io/badge/stability-experimental-orange.svg)
+[![nimarrow CI](https://github.com/emef/nimarrow/actions/workflows/ci.yaml/badge.svg)](https://github.com/emef/nimarrow/actions/workflows/ci.yaml) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) ![Stability](https://img.shields.io/badge/stability-experimental-orange.svg)
 
 # nimarrow - libarrow bindings for nim
 
