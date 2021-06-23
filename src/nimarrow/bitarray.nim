@@ -42,7 +42,7 @@ func `[]=`*[T](b: var BitVector[T], i: int, value: Bit) {.inline.} =
 func add*[T](b: var BitVector[T], value: Bit) {.inline.} =
   ## Add an element to the end of the BitVector.
   let i = b.bitlength  
-  if (i div (T.sizeof * 8)) > b.base.len():
+  if (i div (T.sizeof * 8)) >= b.base.len():
     b.base.add 0.T
 
   b[i] = value

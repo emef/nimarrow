@@ -106,6 +106,8 @@ function main() {
     title="NullBitmap = BitVector[NullBitmapBase]">NullBitmap</a></li>
   <li><a class="reference" href="#ArrowArrayBuilder"
     title="ArrowArrayBuilder[T] = ref ArrowArrayBuilderObj[T]">ArrowArrayBuilder</a></li>
+  <li><a class="reference" href="#Bytes"
+    title="Bytes = seq[byte]">Bytes</a></li>
 
   </ul>
 </li>
@@ -154,8 +156,8 @@ function main() {
   <ul class="simple nested-toc-section">=destroy
       <li><a class="reference" href="#%3Ddestroy%2CArrowArrayInternal%5BT%5D"
     title="`=destroy`[T](x: var ArrowArrayInternal[T])">=destroy,<wbr>ArrowArrayInternal[T]</a></li>
-  <li><a class="reference" href="#%3Ddestroy%2CWrappedBuffer"
-    title="`=destroy`(x: var WrappedBuffer)">=destroy,<wbr>WrappedBuffer</a></li>
+  <li><a class="reference" href="#%3Ddestroy%2CWrappedBuffer%5BT%5D"
+    title="`=destroy`[T](x: var WrappedBuffer[T])">=destroy,<wbr>WrappedBuffer[T]</a></li>
   <li><a class="reference" href="#%3Ddestroy%2CArrowArrayBuilderObj%5BT%5D"
     title="`=destroy`[T](builder: var ArrowArrayBuilderObj[T])">=destroy,<wbr>ArrowArrayBuilderObj[T]</a></li>
 
@@ -168,11 +170,6 @@ function main() {
   <ul class="simple nested-toc-section">newEmptyArrowArray
       <li><a class="reference" href="#newEmptyArrowArray"
     title="newEmptyArrowArray[T](): ArrowArray[T]">newEmptyArrowArray</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">reserve
-      <li><a class="reference" href="#reserve%2CArrowArrayBuilder%5BT%5D%2Cint64"
-    title="reserve[T](builder: ArrowArrayBuilder[T]; maxSize: int64)">reserve,<wbr>ArrowArrayBuilder[T],<wbr>int64</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">[]
@@ -247,6 +244,13 @@ function main() {
 
 
 </dd>
+<a id="Bytes"></a>
+<dt><pre><a href="arrays.html#Bytes"><span class="Identifier">Bytes</span></a> <span class="Other">=</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">byte</span><span class="Other">]</span></pre></dt>
+<dd>
+
+
+
+</dd>
 
 </dl></div>
 <div class="section" id="12">
@@ -259,8 +263,8 @@ function main() {
 
 
 </dd>
-<a id="=destroy,WrappedBuffer"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CWrappedBuffer"><span class="Identifier">`=destroy`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">WrappedBuffer</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="=destroy,WrappedBuffer[T]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CWrappedBuffer%5BT%5D"><span class="Identifier">`=destroy`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">WrappedBuffer</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
 <dd>
 
 
@@ -278,6 +282,13 @@ Constructs a new empty arrow array of type T.
 <dd>
 
 Constructs a new arrow array of type T filled with <tt class="docutils literal"><span class="pre">data</span></tt>. Note, this creates a copy of <tt class="docutils literal"><span class="pre">data</span></tt> into a new internal buffer. For non-copying array construction, use an ArrowArrayBuilder[T].
+
+</dd>
+<a id="newArrowArray,openArray[Option[T]]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#newArrowArray%2CopenArray%5BOption%5BT%5D%5D"><span class="Identifier">newArrowArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">data</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="arrays.html#ArrowArray"><span class="Identifier">ArrowArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+
+Constructs a new arrow array of type T filled with <tt class="docutils literal"><span class="pre">data</span></tt>. Treats <tt class="docutils literal"><span class="pre">none(T)</span></tt> as null. Note, this creates a copy of <tt class="docutils literal"><span class="pre">data</span></tt> into a new internal buffer. For non-copying array construction, use an ArrowArrayBuilder[T].   
 
 </dd>
 <a id="len,ArrowArray[T]"></a>
@@ -350,13 +361,6 @@ Returns a slice of this array for the given range.
 Construct a new empty array builder.    
 
 </dd>
-<a id="reserve,ArrowArrayBuilder[T],int64"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#reserve%2CArrowArrayBuilder%5BT%5D%2Cint64"><span class="Identifier">reserve</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">builder</span><span class="Other">:</span> <a href="arrays.html#ArrowArrayBuilder"><span class="Identifier">ArrowArrayBuilder</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">maxSize</span><span class="Other">:</span> <span class="Identifier">int64</span><span class="Other">)</span></pre></dt>
-<dd>
-
-Reserve <tt class="docutils literal"><span class="pre">maxSize</span></tt> elements in the array's buffer.    
-
-</dd>
 <a id="add,ArrowArrayBuilder[T],T"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#add%2CArrowArrayBuilder%5BT%5D%2CT"><span class="Identifier">add</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">builder</span><span class="Other">:</span> <a href="arrays.html#ArrowArrayBuilder"><span class="Identifier">ArrowArrayBuilder</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
 <dd>
@@ -368,21 +372,14 @@ Add the element to the array.
 <dt><pre><span class="Keyword">proc</span> <a href="#add%2CArrowArrayBuilder%5BT%5D%2COption%5BT%5D"><span class="Identifier">add</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">builder</span><span class="Other">:</span> <a href="arrays.html#ArrowArrayBuilder"><span class="Identifier">ArrowArrayBuilder</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
 <dd>
 
-Add a value or null to the array, none(T) is treated as null.    
+Add a value or null to the array, none(T) is treated as null.      
 
 </dd>
 <a id="build,ArrowArrayBuilder[T]"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#build%2CArrowArrayBuilder%5BT%5D"><span class="Identifier">build</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">builder</span><span class="Other">:</span> <a href="arrays.html#ArrowArrayBuilder"><span class="Identifier">ArrowArrayBuilder</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="arrays.html#ArrowArray"><span class="Identifier">ArrowArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
 <dd>
 
-Construct an arrow array from the builder's buffer. This does NOT create a copy of the data, and instead transfers ownership of the internal buffer to the array. After this is called, the builder is no longer valid and cannto be mutated.    
-
-</dd>
-<a id="newArrowArray,openArray[Option[T]]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#newArrowArray%2CopenArray%5BOption%5BT%5D%5D"><span class="Identifier">newArrowArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">data</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="arrays.html#ArrowArray"><span class="Identifier">ArrowArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
-<dd>
-
-Constructs a new arrow array of type T filled with <tt class="docutils literal"><span class="pre">data</span></tt>. Treats <tt class="docutils literal"><span class="pre">none(T)</span></tt> as null. Note, this creates a copy of <tt class="docutils literal"><span class="pre">data</span></tt> into a new internal buffer. For non-copying array construction, use an ArrowArrayBuilder[T].Construct an arrow array from elements which may be null, none(T) is treated as null.    
+Construct an arrow array from the builder's buffer. This does NOT create a copy of the data, and instead transfers ownership of the internal buffer to the array. After this is called, the builder is no longer valid and cannto be mutated.   
 
 </dd>
 
@@ -395,7 +392,7 @@ Constructs a new arrow array of type T filled with <tt class="docutils literal">
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-06-22 04:26:08 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-06-23 01:26:19 UTC</small>
       </div>
     </div>
   </div>

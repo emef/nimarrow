@@ -1,9 +1,12 @@
 ArrowArray	nimarrow/arrays.html#ArrowArray	arrays: ArrowArray	
 NullBitmap	nimarrow/arrays.html#NullBitmap	arrays: NullBitmap	
+ArrowArrayBuilder	nimarrow/arrays.html#ArrowArrayBuilder	arrays: ArrowArrayBuilder	
+Bytes	nimarrow/arrays.html#Bytes	arrays: Bytes	
 `=destroy`	nimarrow/arrays.html#=destroy,ArrowArrayInternal[T]	arrays: `=destroy`[T](x: var ArrowArrayInternal[T])	
-`=destroy`	nimarrow/arrays.html#=destroy,WrappedBuffer	arrays: `=destroy`(x: var WrappedBuffer)	
+`=destroy`	nimarrow/arrays.html#=destroy,WrappedBuffer[T]	arrays: `=destroy`[T](x: var WrappedBuffer[T])	
 newEmptyArrowArray	nimarrow/arrays.html#newEmptyArrowArray	arrays: newEmptyArrowArray[T](): ArrowArray[T]	
 newArrowArray	nimarrow/arrays.html#newArrowArray,openArray[T]	arrays: newArrowArray[T](data: openArray[T]): ArrowArray[T]	
+newArrowArray	nimarrow/arrays.html#newArrowArray,openArray[Option[T]]	arrays: newArrowArray[T](data: openArray[Option[T]]): ArrowArray[T]	
 len	nimarrow/arrays.html#len,ArrowArray[T]	arrays: len[T](arr: ArrowArray[T]): int64	
 isNullAt	nimarrow/arrays.html#isNullAt,ArrowArray[T],int64	arrays: isNullAt[T](arr: ArrowArray[T]; i: int64): bool	
 `@`	nimarrow/arrays.html#@,ArrowArray[T]	arrays: `@`[T](arr: ArrowArray[T]): seq[T]	
@@ -12,11 +15,8 @@ isNullAt	nimarrow/arrays.html#isNullAt,ArrowArray[T],int64	arrays: isNullAt[T](a
 `[]`	nimarrow/arrays.html#[],ArrowArray[T],int	arrays: `[]`[T](arr: ArrowArray[T]; i: int): T	
 `[]`	nimarrow/arrays.html#[],ArrowArray[T],Slice[int]	arrays: `[]`[T](arr: ArrowArray[T]; slice: Slice[int]): ArrowArray[T]	
 `[]`	nimarrow/arrays.html#[],ArrowArray[T],Slice[int64]	arrays: `[]`[T](arr: ArrowArray[T]; slice: Slice[int64]): ArrowArray[T]	
-ArrowArrayBuilder	nimarrow/arrays.html#ArrowArrayBuilder	arrays: ArrowArrayBuilder	
 `=destroy`	nimarrow/arrays.html#=destroy,ArrowArrayBuilderObj[T]	arrays: `=destroy`[T](builder: var ArrowArrayBuilderObj[T])	
 newArrowArrayBuilder	nimarrow/arrays.html#newArrowArrayBuilder	arrays: newArrowArrayBuilder[T](): ArrowArrayBuilder[T]	
-reserve	nimarrow/arrays.html#reserve,ArrowArrayBuilder[T],int64	arrays: reserve[T](builder: ArrowArrayBuilder[T]; maxSize: int64)	
 add	nimarrow/arrays.html#add,ArrowArrayBuilder[T],T	arrays: add[T](builder: ArrowArrayBuilder[T]; x: T)	
 add	nimarrow/arrays.html#add,ArrowArrayBuilder[T],Option[T]	arrays: add[T](builder: ArrowArrayBuilder[T]; x: Option[T])	
 build	nimarrow/arrays.html#build,ArrowArrayBuilder[T]	arrays: build[T](builder: ArrowArrayBuilder[T]): ArrowArray[T]	
-newArrowArray	nimarrow/arrays.html#newArrowArray,openArray[Option[T]]	arrays: newArrowArray[T](data: openArray[Option[T]]): ArrowArray[T]	
