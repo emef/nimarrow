@@ -63,12 +63,14 @@ function main() {
 <div class="document" id="documentId">
   <div class="container">
     <h1 class="title">Index</h1>
-    Modules: <a href="nimarrow/arrays.html">nimarrow/arrays</a>, <a href="nimarrow/bitarray.html">nimarrow/bitarray</a>.<br/><p /><h2>API symbols</h2>
+    Modules: <a href="nimarrow/arrays.html">nimarrow/arrays</a>, <a href="nimarrow/bitarray.html">nimarrow/bitarray</a>, <a href="nimarrow/tables.html">nimarrow/tables</a>.<br/><p /><h2>API symbols</h2>
 <dl><dt><a name="%60%24%60" href="#%60%24%60"><span>`$`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="arrays: `$`[T](arr: ArrowArray[T]): string" href="nimarrow/arrays.html#%24%2CArrowArray%5BT%5D">arrays: `$`[T](arr: ArrowArray[T]): string</a></li>
           <li><a class="reference external"
           data-doc-search-tag="bitarray: `$`[T](b: BitVector[T]): string" href="nimarrow/bitarray.html#%24%2CBitVector%5BT%5D">bitarray: `$`[T](b: BitVector[T]): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tables: `$`(table: ArrowTable): string" href="nimarrow/tables.html#%24%2CArrowTable">tables: `$`(table: ArrowTable): string</a></li>
           </ul></dd>
 <dt><a name="%60%3D%3D%60" href="#%60%3D%3D%60"><span>`==`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -78,9 +80,15 @@ function main() {
 <li><a class="reference external"
           data-doc-search-tag="arrays: `=destroy`[T](builder: var ArrowArrayBuilderObj[T])" href="nimarrow/arrays.html#%3Ddestroy%2CArrowArrayBuilderObj%5BT%5D">arrays: `=destroy`[T](builder: var ArrowArrayBuilderObj[T])</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="arrays: `=destroy`[T](x: var ArrowArrayInternal[T])" href="nimarrow/arrays.html#%3Ddestroy%2CArrowArrayInternal%5BT%5D">arrays: `=destroy`[T](x: var ArrowArrayInternal[T])</a></li>
+          data-doc-search-tag="arrays: `=destroy`[T](x: var ArrowArrayObj[T])" href="nimarrow/arrays.html#%3Ddestroy%2CArrowArrayObj%5BT%5D">arrays: `=destroy`[T](x: var ArrowArrayObj[T])</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="arrays: `=destroy`[T](x: var WrappedBuffer[T])" href="nimarrow/arrays.html#%3Ddestroy%2CWrappedBuffer%5BT%5D">arrays: `=destroy`[T](x: var WrappedBuffer[T])</a></li>
+          data-doc-search-tag="arrays: `=destroy`[T](x: var WrappedBufferObj[T])" href="nimarrow/arrays.html#%3Ddestroy%2CWrappedBufferObj%5BT%5D">arrays: `=destroy`[T](x: var WrappedBufferObj[T])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tables: `=destroy`(x: var ArrowFieldObj)" href="nimarrow/tables.html#%3Ddestroy%2CArrowFieldObj">tables: `=destroy`(x: var ArrowFieldObj)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tables: `=destroy`(x: var ArrowSchemaObj)" href="nimarrow/tables.html#%3Ddestroy%2CArrowSchemaObj">tables: `=destroy`(x: var ArrowSchemaObj)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tables: `=destroy`(x: var ArrowTableObj)" href="nimarrow/tables.html#%3Ddestroy%2CArrowTableObj">tables: `=destroy`(x: var ArrowTableObj)</a></li>
           </ul></dd>
 <dt><a name="%60%40%60" href="#%60%40%60"><span>`@`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -109,6 +117,8 @@ function main() {
           data-doc-search-tag="arrays: add[T](builder: ArrowArrayBuilder[T]; x: T)" href="nimarrow/arrays.html#add%2CArrowArrayBuilder%5BT%5D%2CT">arrays: add[T](builder: ArrowArrayBuilder[T]; x: T)</a></li>
           <li><a class="reference external"
           data-doc-search-tag="bitarray: add[T](b: var BitVector[T]; value: Bit)" href="nimarrow/bitarray.html#add%2CBitVector%5BT%5D%2CBit">bitarray: add[T](b: var BitVector[T]; value: Bit)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tables: add[T](b: ArrowTableBuilder; arr: ArrowArray[T])" href="nimarrow/tables.html#add%2CArrowTableBuilder%2CArrowArray%5BT%5D">tables: add[T](b: ArrowTableBuilder; arr: ArrowArray[T])</a></li>
           </ul></dd>
 <dt><a name="ArrowArray" href="#ArrowArray"><span>ArrowArray:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -118,6 +128,22 @@ function main() {
 <li><a class="reference external"
           data-doc-search-tag="arrays: ArrowArrayBuilder" href="nimarrow/arrays.html#ArrowArrayBuilder">arrays: ArrowArrayBuilder</a></li>
           </ul></dd>
+<dt><a name="ArrowField" href="#ArrowField"><span>ArrowField:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tables: ArrowField" href="nimarrow/tables.html#ArrowField">tables: ArrowField</a></li>
+          </ul></dd>
+<dt><a name="ArrowSchema" href="#ArrowSchema"><span>ArrowSchema:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tables: ArrowSchema" href="nimarrow/tables.html#ArrowSchema">tables: ArrowSchema</a></li>
+          </ul></dd>
+<dt><a name="ArrowTable" href="#ArrowTable"><span>ArrowTable:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tables: ArrowTable" href="nimarrow/tables.html#ArrowTable">tables: ArrowTable</a></li>
+          </ul></dd>
+<dt><a name="ArrowTableBuilder" href="#ArrowTableBuilder"><span>ArrowTableBuilder:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tables: ArrowTableBuilder" href="nimarrow/tables.html#ArrowTableBuilder">tables: ArrowTableBuilder</a></li>
+          </ul></dd>
 <dt><a name="BitVector" href="#BitVector"><span>BitVector:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="bitarray: BitVector" href="nimarrow/bitarray.html#BitVector">bitarray: BitVector</a></li>
@@ -125,6 +151,8 @@ function main() {
 <dt><a name="build" href="#build"><span>build:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="arrays: build[T](builder: ArrowArrayBuilder[T]): ArrowArray[T]" href="nimarrow/arrays.html#build%2CArrowArrayBuilder%5BT%5D">arrays: build[T](builder: ArrowArrayBuilder[T]): ArrowArray[T]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tables: build(b: ArrowTableBuilder): ArrowTable" href="nimarrow/tables.html#build%2CArrowTableBuilder">tables: build(b: ArrowTableBuilder): ArrowTable</a></li>
           </ul></dd>
 <dt><a name="Bytes" href="#Bytes"><span>Bytes:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -133,6 +161,44 @@ function main() {
 <dt><a name="cap" href="#cap"><span>cap:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="bitarray: cap[T](b: BitVector[T]): int" href="nimarrow/bitarray.html#cap%2CBitVector%5BT%5D">bitarray: cap[T](b: BitVector[T]): int</a></li>
+          </ul></dd>
+<dt><a name="getDataType" href="#getDataType"><span>getDataType:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="arrays: getDataType(tag`gensym6: TypeTag[bool]): GArrowDataTypePtr" href="nimarrow/arrays.html#getDataType">arrays: getDataType(tag`gensym6: TypeTag[bool]): GArrowDataTypePtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="arrays: getDataType(tag`gensym24: TypeTag[float32]): GArrowDataTypePtr" href="nimarrow/arrays.html#getDataType_10">arrays: getDataType(tag`gensym24: TypeTag[float32]): GArrowDataTypePtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="arrays: getDataType(tag`gensym26: TypeTag[float64]): GArrowDataTypePtr" href="nimarrow/arrays.html#getDataType_11">arrays: getDataType(tag`gensym26: TypeTag[float64]): GArrowDataTypePtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="arrays: getDataType(tag`gensym28: TypeTag[string]): GArrowDataTypePtr" href="nimarrow/arrays.html#getDataType_12">arrays: getDataType(tag`gensym28: TypeTag[string]): GArrowDataTypePtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="arrays: getDataType(tag`gensym31: TypeTag[Bytes]): GArrowDataTypePtr" href="nimarrow/arrays.html#getDataType_13">arrays: getDataType(tag`gensym31: TypeTag[Bytes]): GArrowDataTypePtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="arrays: getDataType(tag`gensym8: TypeTag[int8]): GArrowDataTypePtr" href="nimarrow/arrays.html#getDataType_2">arrays: getDataType(tag`gensym8: TypeTag[int8]): GArrowDataTypePtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="arrays: getDataType(tag`gensym10: TypeTag[uint8]): GArrowDataTypePtr" href="nimarrow/arrays.html#getDataType_3">arrays: getDataType(tag`gensym10: TypeTag[uint8]): GArrowDataTypePtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="arrays: getDataType(tag`gensym12: TypeTag[int16]): GArrowDataTypePtr" href="nimarrow/arrays.html#getDataType_4">arrays: getDataType(tag`gensym12: TypeTag[int16]): GArrowDataTypePtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="arrays: getDataType(tag`gensym14: TypeTag[uint16]): GArrowDataTypePtr" href="nimarrow/arrays.html#getDataType_5">arrays: getDataType(tag`gensym14: TypeTag[uint16]): GArrowDataTypePtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="arrays: getDataType(tag`gensym16: TypeTag[int32]): GArrowDataTypePtr" href="nimarrow/arrays.html#getDataType_6">arrays: getDataType(tag`gensym16: TypeTag[int32]): GArrowDataTypePtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="arrays: getDataType(tag`gensym18: TypeTag[uint32]): GArrowDataTypePtr" href="nimarrow/arrays.html#getDataType_7">arrays: getDataType(tag`gensym18: TypeTag[uint32]): GArrowDataTypePtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="arrays: getDataType(tag`gensym20: TypeTag[int64]): GArrowDataTypePtr" href="nimarrow/arrays.html#getDataType_8">arrays: getDataType(tag`gensym20: TypeTag[int64]): GArrowDataTypePtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="arrays: getDataType(tag`gensym22: TypeTag[uint64]): GArrowDataTypePtr" href="nimarrow/arrays.html#getDataType_9">arrays: getDataType(tag`gensym22: TypeTag[uint64]): GArrowDataTypePtr</a></li>
+          </ul></dd>
+<dt><a name="glibPtr" href="#glibPtr"><span>glibPtr:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="arrays: glibPtr[T](arr: ArrowArray[T]): GArrowArrayPtr" href="nimarrow/arrays.html#glibPtr%2CArrowArray%5BT%5D">arrays: glibPtr[T](arr: ArrowArray[T]): GArrowArrayPtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tables: glibPtr(field: ArrowField): GArrowFieldPtr" href="nimarrow/tables.html#glibPtr%2CArrowField">tables: glibPtr(field: ArrowField): GArrowFieldPtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tables: glibPtr(schema: ArrowSchema): GArrowSchemaPtr" href="nimarrow/tables.html#glibPtr%2CArrowSchema">tables: glibPtr(schema: ArrowSchema): GArrowSchemaPtr</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tables: glibPtr(table: ArrowTable): GArrowTablePtr" href="nimarrow/tables.html#glibPtr%2CArrowTable">tables: glibPtr(table: ArrowTable): GArrowTablePtr</a></li>
           </ul></dd>
 <dt><a name="isNullAt" href="#isNullAt"><span>isNullAt:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -143,6 +209,8 @@ function main() {
           data-doc-search-tag="arrays: len[T](arr: ArrowArray[T]): int64" href="nimarrow/arrays.html#len%2CArrowArray%5BT%5D">arrays: len[T](arr: ArrowArray[T]): int64</a></li>
           <li><a class="reference external"
           data-doc-search-tag="bitarray: len[T](b: BitVector[T]): int" href="nimarrow/bitarray.html#len%2CBitVector%5BT%5D">bitarray: len[T](b: BitVector[T]): int</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tables: len(table: ArrowTable): uint64" href="nimarrow/tables.html#len%2CArrowTable">tables: len(table: ArrowTable): uint64</a></li>
           </ul></dd>
 <dt><a name="newArrowArray" href="#newArrowArray"><span>newArrowArray:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -153,6 +221,18 @@ function main() {
 <dt><a name="newArrowArrayBuilder" href="#newArrowArrayBuilder"><span>newArrowArrayBuilder:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="arrays: newArrowArrayBuilder[T](): ArrowArrayBuilder[T]" href="nimarrow/arrays.html#newArrowArrayBuilder">arrays: newArrowArrayBuilder[T](): ArrowArrayBuilder[T]</a></li>
+          </ul></dd>
+<dt><a name="newArrowField" href="#newArrowField"><span>newArrowField:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tables: newArrowField[T](name: string; typeTag: TypeTag[T]): ArrowField" href="nimarrow/tables.html#newArrowField%2Cstring%2CTypeTag%5BT%5D">tables: newArrowField[T](name: string; typeTag: TypeTag[T]): ArrowField</a></li>
+          </ul></dd>
+<dt><a name="newArrowSchema" href="#newArrowSchema"><span>newArrowSchema:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tables: newArrowSchema(fields: openArray[ArrowField]): ArrowSchema" href="nimarrow/tables.html#newArrowSchema%2CopenArray%5BArrowField%5D">tables: newArrowSchema(fields: openArray[ArrowField]): ArrowSchema</a></li>
+          </ul></dd>
+<dt><a name="newArrowTableBuilder" href="#newArrowTableBuilder"><span>newArrowTableBuilder:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tables: newArrowTableBuilder(schema: ArrowSchema): ArrowTableBuilder" href="nimarrow/tables.html#newArrowTableBuilder%2CArrowSchema">tables: newArrowTableBuilder(schema: ArrowSchema): ArrowTableBuilder</a></li>
           </ul></dd>
 <dt><a name="newBitVector" href="#newBitVector"><span>newBitVector:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -166,6 +246,10 @@ function main() {
 <li><a class="reference external"
           data-doc-search-tag="arrays: NullBitmap" href="nimarrow/arrays.html#NullBitmap">arrays: NullBitmap</a></li>
           </ul></dd>
+<dt><a name="TypeTag" href="#TypeTag"><span>TypeTag:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="arrays: TypeTag" href="nimarrow/arrays.html#TypeTag">arrays: TypeTag</a></li>
+          </ul></dd>
 <dt><a name="Units" href="#Units"><span>Units:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="bitarray: Units" href="nimarrow/bitarray.html#Units">bitarray: Units</a></li>
@@ -175,7 +259,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-06-23 01:26:19 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-06-23 16:06:27 UTC</small>
       </div>
     </div>
   </div>

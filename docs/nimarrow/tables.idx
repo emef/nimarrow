@@ -1,0 +1,17 @@
+ArrowField	nimarrow/tables.html#ArrowField	tables: ArrowField	
+ArrowSchema	nimarrow/tables.html#ArrowSchema	tables: ArrowSchema	
+ArrowTable	nimarrow/tables.html#ArrowTable	tables: ArrowTable	
+ArrowTableBuilder	nimarrow/tables.html#ArrowTableBuilder	tables: ArrowTableBuilder	
+`=destroy`	nimarrow/tables.html#=destroy,ArrowFieldObj	tables: `=destroy`(x: var ArrowFieldObj)	
+`=destroy`	nimarrow/tables.html#=destroy,ArrowSchemaObj	tables: `=destroy`(x: var ArrowSchemaObj)	
+`=destroy`	nimarrow/tables.html#=destroy,ArrowTableObj	tables: `=destroy`(x: var ArrowTableObj)	
+newArrowField	nimarrow/tables.html#newArrowField,string,TypeTag[T]	tables: newArrowField[T](name: string; typeTag: TypeTag[T]): ArrowField	
+glibPtr	nimarrow/tables.html#glibPtr,ArrowField	tables: glibPtr(field: ArrowField): GArrowFieldPtr	
+newArrowSchema	nimarrow/tables.html#newArrowSchema,openArray[ArrowField]	tables: newArrowSchema(fields: openArray[ArrowField]): ArrowSchema	
+glibPtr	nimarrow/tables.html#glibPtr,ArrowSchema	tables: glibPtr(schema: ArrowSchema): GArrowSchemaPtr	
+newArrowTableBuilder	nimarrow/tables.html#newArrowTableBuilder,ArrowSchema	tables: newArrowTableBuilder(schema: ArrowSchema): ArrowTableBuilder	
+add	nimarrow/tables.html#add,ArrowTableBuilder,ArrowArray[T]	tables: add[T](b: ArrowTableBuilder; arr: ArrowArray[T])	
+build	nimarrow/tables.html#build,ArrowTableBuilder	tables: build(b: ArrowTableBuilder): ArrowTable	
+glibPtr	nimarrow/tables.html#glibPtr,ArrowTable	tables: glibPtr(table: ArrowTable): GArrowTablePtr	
+len	nimarrow/tables.html#len,ArrowTable	tables: len(table: ArrowTable): uint64	
+`$`	nimarrow/tables.html#$,ArrowTable	tables: `$`(table: ArrowTable): string	

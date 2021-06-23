@@ -6,7 +6,7 @@
 
 "[Apache Arrow](https://arrow.apache.org/) defines a language-independent columnar memory format for flat and hierarchical data, organized for efficient analytic operations on modern hardware like CPUs and GPUs. The Arrow memory format also supports zero-copy reads for lightning-fast data access without serialization overhead."
 
-`nimarrow` provides an ergonomic nim interface to the lower level libarrow c api. 
+`nimarrow` provides an ergonomic nim interface to the lower level libarrow c api.
 
 # Project Status
 
@@ -14,7 +14,7 @@ This library is still a WIP and will be developed alongside the [nimarrow_glib](
 
 - [x] arrays
 - [ ] date/timestamp/decimal types
-- [ ] tables
+- [x] tables
 - [ ] parquet read/write
 - [ ] IPC format
 - [ ] cuda
@@ -23,8 +23,12 @@ This library is still a WIP and will be developed alongside the [nimarrow_glib](
 
 ## Arrays
 
+An ArrowArray[T] is simply a 1D array of type T. It manages its own data on the heap in 64byte-aligned buffers to interop with the libarrow-glib c API.
+
 ```nim
 import options
+import nimarrow
+
 let arr = newArrowArray[int32](@[1'i32, 2'i32, 3'i32])
 doAssert arr[0] == 1'i32
 doAssert @arr == @[1'i32, 2'i32, 3'i32]
@@ -40,8 +44,37 @@ builder.add 1'i64
 builder.add 2'i64
 builder.add none(int64)
 let withNulls = builder.build()
- 
+
 # nulls show up as 0, must check isNullAt(i)
 doAssert @withNulls == @[1'i64, 2'i64, 0'i64]
 doAssert withNulls.isNullAt(2)
+```
+
+## Tables
+
+An ArrowTable is an ordered collection of named arrays (columns). Each column name and type is described by its ArrowField, and an ArrowSchema describes all of the columns in a table.
+
+To construct a table, we use an ArrowTableBuilder which is constructed with the intended schema. Each column's data must then be added to the builder in the order specified by the schema. Creating a table does not copy any of the column data, it will share the internal buffers of the arrays used to construct it.
+
+```nim
+import nimarrow
+
+# Schema will be (a: int32, b: string)
+let field1 = newArrowField("a", TypeTag[int32]())
+let field2 = newArrowField("b", TypeTag[string]())
+let schema = newArrowSchema(@[field1, field2])
+
+# Column data for the described fields in the schema.
+let data1 = newArrowArray(@[1'i32, 2'i32, 3'i32])
+let data2 = newArrowArray(@["first", "second", "third"])
+
+# Add each column to the table in order specified by the schema.
+let tableBuilder = newArrowTableBuilder(schema)
+tableBuilder.add data1
+tableBuilder.add data2
+let table = tableBuilder.build
+
+# Convert the table into string representation including
+# it's metadata and all contents.
+discard $table
 ```

@@ -35,7 +35,7 @@ type
     offsets: WrappedBuffer[uint32]
     data: WrappedBuffer[T]
     nullBitmap: WrappedBuffer[NullBitmapBase]
-    glibArray*: GArrowArrayPtr
+    glibArray: GArrowArrayPtr
 
   ArrowArray*[T] = ref ArrowArrayObj[T]
 
@@ -59,9 +59,10 @@ type
 
   ArrowArrayBuilder*[T] = ref ArrowArrayBuilderObj[T]
 
-  Bytes* = seq[byte]
+  Bytes* = seq[byte] ## Binary type
 
-  TypeTag*[T] = object
+  TypeTag*[T] = object  ## Empty container used to map generic type T into
+                        ## the appropriate glib arrow data type internally.
 
 
 proc isBinary(t: typedesc): bool =
@@ -323,6 +324,10 @@ proc `[]`*[T](arr: ArrowArray[T], slice: Slice[int64]): ArrowArray[T] =
   let slice = arraySlice(arr.glibArray, slice.a, sliceLength)
 
   ArrowArray[T](glibArray: slice)
+
+proc glibPtr*[T](arr: ArrowArray[T]): GArrowArrayPtr =
+  ## Access the underlying glib array pointer.
+  arr.glibArray
 
 proc `=destroy`*[T](builder: var ArrowArrayBuilderObj[T]) =
   if builder.data != nil:

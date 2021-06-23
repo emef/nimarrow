@@ -16,7 +16,7 @@ test "can construct simple arrays":
   check arr3.len == 0
   check @arr3 == newSeq[int32]()
 
-  let arr4 = newArrowArray(@[some(1'i64), none(int64), some(2'i64), 
+  let arr4 = newArrowArray(@[some(1'i64), none(int64), some(2'i64),
                              none(int64), none(int64)])
   check arr4.len == 5
   check @arr4 == @[1'i64, 0'i64, 2'i64, 0'i64, 0'i64]
@@ -27,7 +27,7 @@ test "can construct simple arrays":
 test "can build arrays with builder":
   let builder = newArrowArrayBuilder[int64]()
   builder.add 1'i64
-  builder.add 2'i64 
+  builder.add 2'i64
   builder.add(3'i64)
   builder.add(none(int64))
   let arr = builder.build()
@@ -42,25 +42,25 @@ test "can construct string arrays":
   builder.add "1"
   builder.add "two"
   builder.add none(string)
-  builder.add "three"  
+  builder.add "three"
   let arr = builder.build()
 
   check arr.len == 4
   check arr[0] == "1"
   check arr[1] == "two"
   check arr[2] == ""
-  check @arr == @["1", "two", "", "three"]  
+  check @arr == @["1", "two", "", "three"]
   check arr.isNullAt(2)
 
   let bigBuilder = newArrowArrayBuilder[string]()
   for i in 0..<1000:
     if i mod 5 == 4:
-      bigBuilder.add none(string)      
+      bigBuilder.add none(string)
     else:
       bigBuilder.add "element_" & $i
-      
+
   let bigArr = bigBuilder.build()
-  check bigArr.len == 1000  
+  check bigArr.len == 1000
   check bigArr.isNullAt(99)
   check bigArr[100] == "element_100"
 
