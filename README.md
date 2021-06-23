@@ -8,6 +8,10 @@
 
 `nimarrow` provides an ergonomic nim interface to the lower level libarrow c api.
 
+# Dependencies
+
+`nimarrow` depends on the package `nimarrow_glib` which provides bindings to the  libarrow-glib and liboarquet-glib shared libraries. See the [installation notes](https://github.com/emef/nimarrow_glib/#installation-notes) for instructions on how to install those libraries.
+
 # Project Status
 
 This library is still a WIP and will be developed alongside the [nimarrow_glib](https://github.com/emef/nimarrow_glib/) library which exposes the libarrow-glib c API.
