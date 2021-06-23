@@ -10,7 +10,7 @@
 
 # Dependencies
 
-`nimarrow` depends on the package `nimarrow_glib` which provides bindings to the  libarrow-glib and liboarquet-glib shared libraries. See the [installation notes](https://github.com/emef/nimarrow_glib/#installation-notes) for instructions on how to install those libraries.
+`nimarrow` depends on the package `nimarrow_glib` which provides bindings to the  libarrow-glib and libparquet-glib shared libraries. See the [installation notes](https://github.com/emef/nimarrow_glib/#installation-notes) for instructions on how to install those libraries.
 
 # Project Status
 
