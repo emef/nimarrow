@@ -44,6 +44,7 @@ type
   ArrowSchema* = ref ArrowSchemaObj
 
   ArrowTableObj = object
+    schema: ArrowSchema
     glibTable: GArrowTablePtr
   ArrowTable* = ref ArrowTableObj
 
@@ -115,6 +116,7 @@ proc build*(b: ArrowTableBuilder): ArrowTable =
   var error: GErrorPtr
 
   ArrowTable(
+    schema: b.schema,
     glibTable: tableNewArrays(b.schema.glibSchema, glibArraysPtr, nArrays, error)
   )
 
@@ -130,3 +132,6 @@ proc `$`*(table: ArrowTable): string =
   ## String representation of the table's schema and full contents.
   var error: GErrorPtr
   $tableToString(table.glibTable, error)
+
+proc schema*(table: ArrowTable): ArrowSchema =
+  table.schema
