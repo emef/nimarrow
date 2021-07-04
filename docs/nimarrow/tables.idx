@@ -8,10 +8,14 @@ ArrowTableBuilder	nimarrow/tables.html#ArrowTableBuilder	tables: ArrowTableBuild
 newArrowField	nimarrow/tables.html#newArrowField,string,TypeTag[T]	tables: newArrowField[T](name: string; typeTag: TypeTag[T]): ArrowField	
 glibPtr	nimarrow/tables.html#glibPtr,ArrowField	tables: glibPtr(field: ArrowField): GArrowFieldPtr	
 newArrowSchema	nimarrow/tables.html#newArrowSchema,openArray[ArrowField]	tables: newArrowSchema(fields: openArray[ArrowField]): ArrowSchema	
+newArrowSchema	nimarrow/tables.html#newArrowSchema,GArrowSchemaPtr	tables: newArrowSchema(glibSchema: GArrowSchemaPtr): ArrowSchema	
 glibPtr	nimarrow/tables.html#glibPtr,ArrowSchema	tables: glibPtr(schema: ArrowSchema): GArrowSchemaPtr	
-newArrowTableBuilder	nimarrow/tables.html#newArrowTableBuilder,ArrowSchema	tables: newArrowTableBuilder(schema: ArrowSchema): ArrowTableBuilder	
-add	nimarrow/tables.html#add,ArrowTableBuilder,ArrowArray[T]	tables: add[T](b: ArrowTableBuilder; arr: ArrowArray[T])	
-build	nimarrow/tables.html#build,ArrowTableBuilder	tables: build(b: ArrowTableBuilder): ArrowTable	
+newArrowTable	nimarrow/tables.html#newArrowTable,ArrowSchema,GArrowTablePtr	tables: newArrowTable(schema: ArrowSchema; glibTable: GArrowTablePtr): ArrowTable	
 glibPtr	nimarrow/tables.html#glibPtr,ArrowTable	tables: glibPtr(table: ArrowTable): GArrowTablePtr	
 len	nimarrow/tables.html#len,ArrowTable	tables: len(table: ArrowTable): uint64	
 `$`	nimarrow/tables.html#$,ArrowTable	tables: `$`(table: ArrowTable): string	
+`==`	nimarrow/tables.html#==,ArrowTable,ArrowTable	tables: `==`(table, other: ArrowTable): bool	
+schema	nimarrow/tables.html#schema,ArrowTable	tables: schema(table: ArrowTable): ArrowSchema	
+newArrowTableBuilder	nimarrow/tables.html#newArrowTableBuilder,ArrowSchema	tables: newArrowTableBuilder(schema: ArrowSchema): ArrowTableBuilder	
+add	nimarrow/tables.html#add,ArrowTableBuilder,ArrowArray[T]	tables: add[T](b: ArrowTableBuilder; arr: ArrowArray[T])	
+build	nimarrow/tables.html#build,ArrowTableBuilder	tables: build(b: ArrowTableBuilder): ArrowTable	

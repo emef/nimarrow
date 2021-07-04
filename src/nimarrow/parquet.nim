@@ -5,6 +5,7 @@ import nimarrow_glib
 import ./tables
 
 runnableExamples:
+  import nimarrow
   let field1 = newArrowField("a", TypeTag[int32]())
   let field2 = newArrowField("b", TypeTag[string]())
 

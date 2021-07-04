@@ -135,11 +135,18 @@ function main() {
   <ul class="simple nested-toc-section">newArrowSchema
       <li><a class="reference" href="#newArrowSchema%2CopenArray%5BArrowField%5D"
     title="newArrowSchema(fields: openArray[ArrowField]): ArrowSchema">newArrowSchema,<wbr>openArray[ArrowField]</a></li>
+  <li><a class="reference" href="#newArrowSchema%2CGArrowSchemaPtr"
+    title="newArrowSchema(glibSchema: GArrowSchemaPtr): ArrowSchema">newArrowSchema,<wbr>GArrowSchemaPtr</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">len
       <li><a class="reference" href="#len%2CArrowTable"
     title="len(table: ArrowTable): uint64">len,<wbr>ArrowTable</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">newArrowTable
+      <li><a class="reference" href="#newArrowTable%2CArrowSchema%2CGArrowTablePtr"
+    title="newArrowTable(schema: ArrowSchema; glibTable: GArrowTablePtr): ArrowTable">newArrowTable,<wbr>ArrowSchema,<wbr>GArrowTablePtr</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">add
@@ -161,6 +168,11 @@ function main() {
     title="newArrowTableBuilder(schema: ArrowSchema): ArrowTableBuilder">newArrowTableBuilder,<wbr>ArrowSchema</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">schema
+      <li><a class="reference" href="#schema%2CArrowTable"
+    title="schema(table: ArrowTable): ArrowSchema">schema,<wbr>ArrowTable</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">glibPtr
       <li><a class="reference" href="#glibPtr%2CArrowField"
     title="glibPtr(field: ArrowField): GArrowFieldPtr">glibPtr,<wbr>ArrowField</a></li>
@@ -168,6 +180,11 @@ function main() {
     title="glibPtr(schema: ArrowSchema): GArrowSchemaPtr">glibPtr,<wbr>ArrowSchema</a></li>
   <li><a class="reference" href="#glibPtr%2CArrowTable"
     title="glibPtr(table: ArrowTable): GArrowTablePtr">glibPtr,<wbr>ArrowTable</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">==
+      <li><a class="reference" href="#%3D%3D%2CArrowTable%2CArrowTable"
+    title="`==`(table, other: ArrowTable): bool">==,<wbr>ArrowTable,<wbr>ArrowTable</a></li>
 
   </ul>
 
@@ -292,11 +309,62 @@ Access the underlying glib field pointer.
 Construct a new schema from a sequence of fields.
 
 </dd>
+<a id="newArrowSchema,GArrowSchemaPtr"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#newArrowSchema%2CGArrowSchemaPtr"><span class="Identifier">newArrowSchema</span></a><span class="Other">(</span><span class="Identifier">glibSchema</span><span class="Other">:</span> <span class="Identifier">GArrowSchemaPtr</span><span class="Other">)</span><span class="Other">:</span> <a href="tables.html#ArrowSchema"><span class="Identifier">ArrowSchema</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Construct an ArrowSchema from a glib schema pointer. NOTE: this takes ownership of the pointer and does not increase the refcount.
+
+</dd>
 <a id="glibPtr,ArrowSchema"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#glibPtr%2CArrowSchema"><span class="Identifier">glibPtr</span></a><span class="Other">(</span><span class="Identifier">schema</span><span class="Other">:</span> <a href="tables.html#ArrowSchema"><span class="Identifier">ArrowSchema</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowSchemaPtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Access the underlying glib schema pointer.
+
+</dd>
+<a id="newArrowTable,ArrowSchema,GArrowTablePtr"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#newArrowTable%2CArrowSchema%2CGArrowTablePtr"><span class="Identifier">newArrowTable</span></a><span class="Other">(</span><span class="Identifier">schema</span><span class="Other">:</span> <a href="tables.html#ArrowSchema"><span class="Identifier">ArrowSchema</span></a><span class="Other">;</span> <span class="Identifier">glibTable</span><span class="Other">:</span> <span class="Identifier">GArrowTablePtr</span><span class="Other">)</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Construct an ArrowTable from schema and glib table pointer. NOTE: this takes ownership of the pointer and does not increase the refcount.
+
+</dd>
+<a id="glibPtr,ArrowTable"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#glibPtr%2CArrowTable"><span class="Identifier">glibPtr</span></a><span class="Other">(</span><span class="Identifier">table</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowTablePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Access the underlying glib table pointer.
+
+</dd>
+<a id="len,ArrowTable"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#len%2CArrowTable"><span class="Identifier">len</span></a><span class="Other">(</span><span class="Identifier">table</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint64</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Get the length (number of rows) of the table.
+
+</dd>
+<a id="$,ArrowTable"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#%24%2CArrowTable"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">table</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+String representation of the table's schema and full contents.
+
+</dd>
+<a id="==,ArrowTable,ArrowTable"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#%3D%3D%2CArrowTable%2CArrowTable"><span class="Identifier">`==`</span></a><span class="Other">(</span><span class="Identifier">table</span><span class="Other">,</span> <span class="Identifier">other</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="schema,ArrowTable"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#schema%2CArrowTable"><span class="Identifier">schema</span></a><span class="Other">(</span><span class="Identifier">table</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">)</span><span class="Other">:</span> <a href="tables.html#ArrowSchema"><span class="Identifier">ArrowSchema</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
 
 </dd>
 <a id="newArrowTableBuilder,ArrowSchema"></a>
@@ -315,31 +383,10 @@ Add the next column to the builder, must be of the correct type specified in the
 
 </dd>
 <a id="build,ArrowTableBuilder"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#build%2CArrowTableBuilder"><span class="Identifier">build</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="tables.html#ArrowTableBuilder"><span class="Identifier">ArrowTableBuilder</span></a><span class="Other">)</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#build%2CArrowTableBuilder"><span class="Identifier">build</span></a><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <a href="tables.html#ArrowTableBuilder"><span class="Identifier">ArrowTableBuilder</span></a><span class="Other">)</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 Build the table, invalidating this builder.
-
-</dd>
-<a id="glibPtr,ArrowTable"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#glibPtr%2CArrowTable"><span class="Identifier">glibPtr</span></a><span class="Other">(</span><span class="Identifier">table</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowTablePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-Access the underlying glib table pointer.
-
-</dd>
-<a id="len,ArrowTable"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#len%2CArrowTable"><span class="Identifier">len</span></a><span class="Other">(</span><span class="Identifier">table</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint64</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-Get the length (number of rows) of the table.
-
-</dd>
-<a id="$,ArrowTable"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#%24%2CArrowTable"><span class="Identifier">`$`</span></a><span class="Other">(</span><span class="Identifier">table</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-String representation of the table's schema and full contents.
 
 </dd>
 
@@ -352,7 +399,7 @@ String representation of the table's schema and full contents.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-06-23 16:06:27 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-04 04:57:32 UTC</small>
       </div>
     </div>
   </div>

@@ -30,7 +30,6 @@ isNullAt	nimarrow/arrays.html#isNullAt,ArrowArray[T],int64	arrays: isNullAt[T](a
 `[]`	nimarrow/arrays.html#[],ArrowArray[T],Slice[int]	arrays: `[]`[T](arr: ArrowArray[T]; slice: Slice[int]): ArrowArray[T]	
 `[]`	nimarrow/arrays.html#[],ArrowArray[T],Slice[int64]	arrays: `[]`[T](arr: ArrowArray[T]; slice: Slice[int64]): ArrowArray[T]	
 glibPtr	nimarrow/arrays.html#glibPtr,ArrowArray[T]	arrays: glibPtr[T](arr: ArrowArray[T]): GArrowArrayPtr	
-`=destroy`	nimarrow/arrays.html#=destroy,ArrowArrayBuilderObj[T]	arrays: `=destroy`[T](builder: var ArrowArrayBuilderObj[T])	
 newArrowArrayBuilder	nimarrow/arrays.html#newArrowArrayBuilder	arrays: newArrowArrayBuilder[T](): ArrowArrayBuilder[T]	
 add	nimarrow/arrays.html#add,ArrowArrayBuilder[T],T	arrays: add[T](builder: ArrowArrayBuilder[T]; x: T)	
 add	nimarrow/arrays.html#add,ArrowArrayBuilder[T],Option[T]	arrays: add[T](builder: ArrowArrayBuilder[T]; x: Option[T])	

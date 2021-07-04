@@ -63,7 +63,7 @@ function main() {
 <div class="document" id="documentId">
   <div class="container">
     <h1 class="title">Index</h1>
-    Modules: <a href="nimarrow/arrays.html">nimarrow/arrays</a>, <a href="nimarrow/bitarray.html">nimarrow/bitarray</a>, <a href="nimarrow/tables.html">nimarrow/tables</a>.<br/><p /><h2>API symbols</h2>
+    Modules: <a href="nimarrow/arrays.html">nimarrow/arrays</a>, <a href="nimarrow/bitarray.html">nimarrow/bitarray</a>, <a href="nimarrow/parquet.html">nimarrow/parquet</a>, <a href="nimarrow/tables.html">nimarrow/tables</a>.<br/><p /><h2>API symbols</h2>
 <dl><dt><a name="%60%24%60" href="#%60%24%60"><span>`$`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="arrays: `$`[T](arr: ArrowArray[T]): string" href="nimarrow/arrays.html#%24%2CArrowArray%5BT%5D">arrays: `$`[T](arr: ArrowArray[T]): string</a></li>
@@ -75,14 +75,18 @@ function main() {
 <dt><a name="%60%3D%3D%60" href="#%60%3D%3D%60"><span>`==`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="bitarray: `==`(x, y: BitVector): bool" href="nimarrow/bitarray.html#%3D%3D%2CBitVector%2CBitVector">bitarray: `==`(x, y: BitVector): bool</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tables: `==`(table, other: ArrowTable): bool" href="nimarrow/tables.html#%3D%3D%2CArrowTable%2CArrowTable">tables: `==`(table, other: ArrowTable): bool</a></li>
           </ul></dd>
 <dt><a name="%60%3Ddestroy%60" href="#%60%3Ddestroy%60"><span>`=destroy`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="arrays: `=destroy`[T](builder: var ArrowArrayBuilderObj[T])" href="nimarrow/arrays.html#%3Ddestroy%2CArrowArrayBuilderObj%5BT%5D">arrays: `=destroy`[T](builder: var ArrowArrayBuilderObj[T])</a></li>
-          <li><a class="reference external"
           data-doc-search-tag="arrays: `=destroy`[T](x: var ArrowArrayObj[T])" href="nimarrow/arrays.html#%3Ddestroy%2CArrowArrayObj%5BT%5D">arrays: `=destroy`[T](x: var ArrowArrayObj[T])</a></li>
           <li><a class="reference external"
           data-doc-search-tag="arrays: `=destroy`[T](x: var WrappedBufferObj[T])" href="nimarrow/arrays.html#%3Ddestroy%2CWrappedBufferObj%5BT%5D">arrays: `=destroy`[T](x: var WrappedBufferObj[T])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="parquet: `=destroy`(x: var ParquetWriterObj)" href="nimarrow/parquet.html#%3Ddestroy%2CParquetWriterObj">parquet: `=destroy`(x: var ParquetWriterObj)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="parquet: `=destroy`(x: var ParquetWriterPropsObj)" href="nimarrow/parquet.html#%3Ddestroy%2CParquetWriterPropsObj">parquet: `=destroy`(x: var ParquetWriterPropsObj)</a></li>
           <li><a class="reference external"
           data-doc-search-tag="tables: `=destroy`(x: var ArrowFieldObj)" href="nimarrow/tables.html#%3Ddestroy%2CArrowFieldObj">tables: `=destroy`(x: var ArrowFieldObj)</a></li>
           <li><a class="reference external"
@@ -119,6 +123,10 @@ function main() {
           data-doc-search-tag="bitarray: add[T](b: var BitVector[T]; value: Bit)" href="nimarrow/bitarray.html#add%2CBitVector%5BT%5D%2CBit">bitarray: add[T](b: var BitVector[T]; value: Bit)</a></li>
           <li><a class="reference external"
           data-doc-search-tag="tables: add[T](b: ArrowTableBuilder; arr: ArrowArray[T])" href="nimarrow/tables.html#add%2CArrowTableBuilder%2CArrowArray%5BT%5D">tables: add[T](b: ArrowTableBuilder; arr: ArrowArray[T])</a></li>
+          </ul></dd>
+<dt><a name="append" href="#append"><span>append:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="parquet: append(w: ParquetWriter; table: ArrowTable)" href="nimarrow/parquet.html#append%2CParquetWriter%2CArrowTable">parquet: append(w: ParquetWriter; table: ArrowTable)</a></li>
           </ul></dd>
 <dt><a name="ArrowArray" href="#ArrowArray"><span>ArrowArray:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -161,6 +169,14 @@ function main() {
 <dt><a name="cap" href="#cap"><span>cap:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="bitarray: cap[T](b: BitVector[T]): int" href="nimarrow/bitarray.html#cap%2CBitVector%5BT%5D">bitarray: cap[T](b: BitVector[T]): int</a></li>
+          </ul></dd>
+<dt><a name="close" href="#close"><span>close:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="parquet: close(w: ParquetWriter)" href="nimarrow/parquet.html#close%2CParquetWriter">parquet: close(w: ParquetWriter)</a></li>
+          </ul></dd>
+<dt><a name="fromParquet" href="#fromParquet"><span>fromParquet:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="parquet: fromParquet(path: string): ArrowTable" href="nimarrow/parquet.html#fromParquet%2Cstring">parquet: fromParquet(path: string): ArrowTable</a></li>
           </ul></dd>
 <dt><a name="getDataType" href="#getDataType"><span>getDataType:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -228,7 +244,13 @@ function main() {
           </ul></dd>
 <dt><a name="newArrowSchema" href="#newArrowSchema"><span>newArrowSchema:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="tables: newArrowSchema(glibSchema: GArrowSchemaPtr): ArrowSchema" href="nimarrow/tables.html#newArrowSchema%2CGArrowSchemaPtr">tables: newArrowSchema(glibSchema: GArrowSchemaPtr): ArrowSchema</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="tables: newArrowSchema(fields: openArray[ArrowField]): ArrowSchema" href="nimarrow/tables.html#newArrowSchema%2CopenArray%5BArrowField%5D">tables: newArrowSchema(fields: openArray[ArrowField]): ArrowSchema</a></li>
+          </ul></dd>
+<dt><a name="newArrowTable" href="#newArrowTable"><span>newArrowTable:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tables: newArrowTable(schema: ArrowSchema; glibTable: GArrowTablePtr): ArrowTable" href="nimarrow/tables.html#newArrowTable%2CArrowSchema%2CGArrowTablePtr">tables: newArrowTable(schema: ArrowSchema; glibTable: GArrowTablePtr): ArrowTable</a></li>
           </ul></dd>
 <dt><a name="newArrowTableBuilder" href="#newArrowTableBuilder"><span>newArrowTableBuilder:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -242,9 +264,47 @@ function main() {
 <li><a class="reference external"
           data-doc-search-tag="arrays: newEmptyArrowArray[T](): ArrowArray[T]" href="nimarrow/arrays.html#newEmptyArrowArray">arrays: newEmptyArrowArray[T](): ArrowArray[T]</a></li>
           </ul></dd>
+<dt><a name="newParquetWriter" href="#newParquetWriter"><span>newParquetWriter:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="parquet: newParquetWriter(schema: ArrowSchema; path: string;
+                 props: Option[ParquetWriterProps] = none(ParquetWriterProps)): ParquetWriter" href="nimarrow/parquet.html#newParquetWriter%2CArrowSchema%2Cstring%2COption%5BParquetWriterProps%5D">parquet: newParquetWriter(schema: ArrowSchema; path: string;
+                 props: Option[ParquetWriterProps] = none(ParquetWriterProps)): ParquetWriter</a></li>
+          </ul></dd>
+<dt><a name="newParquetWriterProps" href="#newParquetWriterProps"><span>newParquetWriterProps:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="parquet: newParquetWriterProps(compression: GArrowCompressionType = GARROW_COMPRESSION_TYPE_SNAPPY;
+                      enableDictionary: bool = true;
+                      dictionaryPageSizeLimit: Option[int64] = none(int64);
+                      batchSize: Option[int64] = none(int64);
+                      maxRowGroupLength: Option[int64] = none(int64);
+                      dataPageSize: Option[int64] = none(int64)): ParquetWriterProps" href="nimarrow/parquet.html#newParquetWriterProps%2CGArrowCompressionType%2Cbool%2COption%5Bint64%5D%2COption%5Bint64%5D%2COption%5Bint64%5D%2COption%5Bint64%5D">parquet: newParquetWriterProps(compression: GArrowCompressionType = GARROW_COMPRESSION_TYPE_SNAPPY;
+                      enableDictionary: bool = true;
+                      dictionaryPageSizeLimit: Option[int64] = none(int64);
+                      batchSize: Option[int64] = none(int64);
+                      maxRowGroupLength: Option[int64] = none(int64);
+                      dataPageSize: Option[int64] = none(int64)): ParquetWriterProps</a></li>
+          </ul></dd>
 <dt><a name="NullBitmap" href="#NullBitmap"><span>NullBitmap:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="arrays: NullBitmap" href="nimarrow/arrays.html#NullBitmap">arrays: NullBitmap</a></li>
+          </ul></dd>
+<dt><a name="ParquetWriter" href="#ParquetWriter"><span>ParquetWriter:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="parquet: ParquetWriter" href="nimarrow/parquet.html#ParquetWriter">parquet: ParquetWriter</a></li>
+          </ul></dd>
+<dt><a name="ParquetWriterProps" href="#ParquetWriterProps"><span>ParquetWriterProps:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="parquet: ParquetWriterProps" href="nimarrow/parquet.html#ParquetWriterProps">parquet: ParquetWriterProps</a></li>
+          </ul></dd>
+<dt><a name="schema" href="#schema"><span>schema:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tables: schema(table: ArrowTable): ArrowSchema" href="nimarrow/tables.html#schema%2CArrowTable">tables: schema(table: ArrowTable): ArrowSchema</a></li>
+          </ul></dd>
+<dt><a name="toParquet" href="#toParquet"><span>toParquet:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="parquet: toParquet(t: ArrowTable; path: string;
+          props: Option[ParquetWriterProps] = none(ParquetWriterProps))" href="nimarrow/parquet.html#toParquet%2CArrowTable%2Cstring%2COption%5BParquetWriterProps%5D">parquet: toParquet(t: ArrowTable; path: string;
+          props: Option[ParquetWriterProps] = none(ParquetWriterProps))</a></li>
           </ul></dd>
 <dt><a name="TypeTag" href="#TypeTag"><span>TypeTag:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -259,7 +319,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-06-23 16:06:27 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-04 04:57:32 UTC</small>
       </div>
     </div>
   </div>

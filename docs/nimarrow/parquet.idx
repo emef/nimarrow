@@ -1,0 +1,10 @@
+ParquetWriterProps	nimarrow/parquet.html#ParquetWriterProps	parquet: ParquetWriterProps	
+ParquetWriter	nimarrow/parquet.html#ParquetWriter	parquet: ParquetWriter	
+`=destroy`	nimarrow/parquet.html#=destroy,ParquetWriterPropsObj	parquet: `=destroy`(x: var ParquetWriterPropsObj)	
+`=destroy`	nimarrow/parquet.html#=destroy,ParquetWriterObj	parquet: `=destroy`(x: var ParquetWriterObj)	
+newParquetWriterProps	nimarrow/parquet.html#newParquetWriterProps,GArrowCompressionType,bool,Option[int64],Option[int64],Option[int64],Option[int64]	parquet: newParquetWriterProps(compression: GArrowCompressionType = GARROW_COMPRESSION_TYPE_SNAPPY;\n                      enableDictionary: bool = true;\n                      dictionaryPageSizeLimit: Option[int64] = none(int64);\n                      batchSize: Option[int64] = none(int64);\n                      maxRowGroupLength: Option[int64] = none(int64);\n                      dataPageSize: Option[int64] = none(int64)): ParquetWriterProps	
+newParquetWriter	nimarrow/parquet.html#newParquetWriter,ArrowSchema,string,Option[ParquetWriterProps]	parquet: newParquetWriter(schema: ArrowSchema; path: string;\n                 props: Option[ParquetWriterProps] = none(ParquetWriterProps)): ParquetWriter	
+append	nimarrow/parquet.html#append,ParquetWriter,ArrowTable	parquet: append(w: ParquetWriter; table: ArrowTable)	
+close	nimarrow/parquet.html#close,ParquetWriter	parquet: close(w: ParquetWriter)	
+toParquet	nimarrow/parquet.html#toParquet,ArrowTable,string,Option[ParquetWriterProps]	parquet: toParquet(t: ArrowTable; path: string;\n          props: Option[ParquetWriterProps] = none(ParquetWriterProps))	
+fromParquet	nimarrow/parquet.html#fromParquet,string	parquet: fromParquet(path: string): ArrowTable	
