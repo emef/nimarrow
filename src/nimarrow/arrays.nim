@@ -329,10 +329,6 @@ proc glibPtr*[T](arr: ArrowArray[T]): GArrowArrayPtr =
   ## Access the underlying glib array pointer.
   arr.glibArray
 
-proc `=destroy`*[T](builder: var ArrowArrayBuilderObj[T]) =
-  if builder.data != nil:
-    dealloc(builder.data)
-
 proc newArrowArrayBuilder*[T](): ArrowArrayBuilder[T] =
   ## Construct a new empty array builder.
   ArrowArrayBuilder[T](

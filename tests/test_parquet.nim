@@ -2,7 +2,7 @@ import unittest
 
 import nimarrow
 
-test "can write parquet":
+test "can read and write parquet":
   let field1 = newArrowField("a", TypeTag[int32]())
   let field2 = newArrowField("b", TypeTag[string]())
 
@@ -17,3 +17,6 @@ test "can write parquet":
   let table = tableBuilder.build
 
   table.toParquet("/tmp/test.parquet")
+
+  let rereadTable = fromParquet("/tmp/test.parquet")
+  check table == rereadTable

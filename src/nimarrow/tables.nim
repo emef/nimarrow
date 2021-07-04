@@ -68,8 +68,8 @@ proc `=destroy`*(x: var ArrowTableObj) =
 proc newArrowField*[T](name: string, typeTag: TypeTag[T]): ArrowField =
   ## Create a new field of type T named `name`.
   let glibDataType = getDataType(typeTag)
-  result = ArrowField(glibField: fieldNew(name, glibDataType))
-  gObjectUnref(glibDataType)
+  defer: gObjectUnref(glibDataType)
+  ArrowField(glibField: fieldNew(name, glibDataType))
 
 proc glibPtr*(field: ArrowField): GArrowFieldPtr =
   ## Access the underlying glib field pointer.
@@ -82,12 +82,46 @@ proc newArrowSchema*(fields: openArray[ArrowField]): ArrowSchema =
   for field in fields:
     fieldList = glistAppend(fieldList, field.glibField)
 
-  result = ArrowSchema(glibSchema: schemaNew(fieldList))
-  glistFree(fieldList)
+  defer: glistFree(fieldList)
+  ArrowSchema(glibSchema: schemaNew(fieldList))
+
+proc newArrowSchema*(glibSchema: GArrowSchemaPtr): ArrowSchema =
+  ## Construct an ArrowSchema from a glib schema pointer. NOTE: this takes
+  ## ownership of the pointer and does not increase the refcount.
+  doAssert glibSchema != nil
+  ArrowSchema(glibSchema: glibSchema)
 
 proc glibPtr*(schema: ArrowSchema): GArrowSchemaPtr =
   ## Access the underlying glib schema pointer.
   schema.glibSchema
+
+proc newArrowTable*(schema: ArrowSchema, glibTable: GArrowTablePtr): ArrowTable =
+  ## Construct an ArrowTable from schema and glib table pointer. NOTE: this takes
+  ## ownership of the pointer and does not increase the refcount.
+  doAssert glibTable != nil
+  ArrowTable(schema: schema, glibTable: glibTable)
+
+proc glibPtr*(table: ArrowTable): GArrowTablePtr =
+  ## Access the underlying glib table pointer.
+  table.glibTable
+
+proc len*(table: ArrowTable): uint64 =
+  ## Get the length (number of rows) of the table.
+  tableGetNRows(table.glibTable)
+
+proc `$`*(table: ArrowTable): string =
+  ## String representation of the table's schema and full contents.
+  var error: GErrorPtr
+  result = $tableToString(table.glibTable, error)
+  if error != nil:
+    defer: gErrorFree(error)
+    raise newException(ValueError, $error.message)
+
+proc `==`*(table, other: ArrowTable): bool =
+  tableEqual(table.glibPtr, other.glibPtr)
+
+proc schema*(table: ArrowTable): ArrowSchema =
+  table.schema
 
 proc newArrowTableBuilder*(schema: ArrowSchema): ArrowTableBuilder =
   ## Construct a new table builder for a given schema. Each column
@@ -114,24 +148,10 @@ proc build*(b: ArrowTableBuilder): ArrowTable =
   let glibArraysPtr = cast[ptr UncheckedArray[GArrowArrayPtr]](addr b.glibArrays[0])
   let nArrays = uint64(b.glibArrays.len)
   var error: GErrorPtr
+  let glibTable = tableNewArrays(b.schema.glibSchema, glibArraysPtr, nArrays, error)
+  if error != nil:
+    defer: gErrorFree(error)
+    raise newException(ValueError, $error.message)
 
-  ArrowTable(
-    schema: b.schema,
-    glibTable: tableNewArrays(b.schema.glibSchema, glibArraysPtr, nArrays, error)
-  )
+  newArrowTable(b.schema, glibTable)
 
-proc glibPtr*(table: ArrowTable): GArrowTablePtr =
-  ## Access the underlying glib table pointer.
-  table.glibTable
-
-proc len*(table: ArrowTable): uint64 =
-  ## Get the length (number of rows) of the table.
-  tableGetNRows(table.glibTable)
-
-proc `$`*(table: ArrowTable): string =
-  ## String representation of the table's schema and full contents.
-  var error: GErrorPtr
-  $tableToString(table.glibTable, error)
-
-proc schema*(table: ArrowTable): ArrowSchema =
-  table.schema

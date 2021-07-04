@@ -19,7 +19,7 @@ This library is still a WIP and will be developed alongside the [nimarrow_glib](
 - [x] arrays
 - [ ] date/timestamp/decimal types
 - [x] tables
-- [ ] parquet read/write
+- [x] parquet read/write
 - [ ] IPC format
 - [ ] cuda
 
@@ -81,4 +81,21 @@ let table = tableBuilder.build
 # Convert the table into string representation including
 # it's metadata and all contents.
 discard $table
+```
+
+## Read/write parquet
+
+```nim
+import nimarrow
+
+# write to a parquet file with default properties
+let table: ArrowTable = ...
+table.toParquet("/tmp/test.parquet")
+
+# can specify additional writer properties
+let props = newParquetWriterProps(compression: GARROW_COMPRESSION_TYPE_SNAPPY)
+table.toParquet("/tmp/test.parquet.snappy", props)
+
+# read a parquet file into an arrow table
+let table = fromParquet("/tmp/test.parquet")
 ```
