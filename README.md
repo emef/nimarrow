@@ -83,6 +83,36 @@ let table = tableBuilder.build
 discard $table
 ```
 
+## Typed Tables
+
+It can be cumbersome to build fields, schemas, and arrays by hand in order to
+construct an `ArrowTable`. If we can describe one row of the table as an object, we
+can use a `TypedBuilder` to automate all of that. The macro `declareTypedTable` will
+generate all of the necessary procs for a type `T`. This is best demonstrated with
+an example:
+
+```nim
+type
+  CustomType = object
+    a: int32
+    b: string
+    c: uint8
+
+# macro to generate the TypedBuilder functions for our type.
+declareTypedTable(CustomType)
+
+# construct a new TypedBuilder for our type.
+let typedBuilder = newTypedBuilder(TypeTag[CustomType]())
+
+# append rows to the builder using CustomType objects.
+typedBuilder.add CustomType(a: 0'i32, b: "some string", c: 0'u8)
+typedBuilder.add CustomType(a: 1'i32, b: "another", c: 10'u8)
+typedBuilder.add CustomType(a: 2'i32, b: "three", c: 100'u8)
+
+# construct an ArrowTable from the typedBuilder
+let tbl = typedBuilder.build
+```
+
 ## Read/write parquet
 
 ```nim

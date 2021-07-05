@@ -1,3 +1,5 @@
+import macros
+
 import nimarrow_glib
 
 import ./arrays
@@ -155,3 +157,150 @@ proc build*(b: ArrowTableBuilder): ArrowTable =
 
   newArrowTable(b.schema, glibTable)
 
+type
+  TypedBuilder*[T] = ref object of RootObj
+
+macro declareTypedTable*(typ: typed): untyped =
+  ## Macro which generates a TypedBuilder[T] for the given type.
+  ## This generates a few procs to create a new builder, append
+  ## a T to the table, and build the table.
+  ##
+  ##   .. code-block:: nim
+  ##
+  ##      let typedBuilder = newTypedBuilder(TypeTag[MyCustomType]())
+  ##      typedBuilder.add MyCustomType(...)
+  ##      typedBuilder.add MyCustomType(...)
+  ##      let tbl = typedBuilder.build
+  ##
+  result = newStmtList()
+
+  let
+    typDef = getImpl(typ)
+    recList = if typDef[2].kind == nnkRefTy: typDef[2][0][2]
+              else: typDef[2][2]
+    builderTypName = ident($typ & "TableBuilder")
+    newBuilderProcName = ident("newTypedBuilder")
+    addProcName = ident("add")
+    buildProcName = ident("build")
+    paramBuilder = ident("builder")
+    paramValue = ident("x")
+    fields = ident("fields")
+    tblBuilder = ident("tblBuilder")
+    castBuilder = ident("castBuilder")
+    tag = ident("tag")
+    typTag = quote do:
+      TypeTag[`typ`]
+    typedBuilder = quote do:
+      TypedBuilder[`typ`]
+    builderRecList = newNimNode(nnkRecList)
+
+  builderRecList.add newIdentDefs(ident("schema"), ident("ArrowSchema"))
+
+  for i, identDefs in recList:
+    let
+      fieldName = identDefs[0][1]
+      fieldType = identDefs[1]
+      arrayBuilderType = quote do:
+        ArrowArrayBuilder[`fieldType`]
+
+    builderRecList.add newIdentDefs(fieldName, arrayBuilderType)
+
+  let
+    inheritTypedBuilder = newTree(nnkOfInherit, typedBuilder)
+    builderObj = newTree(nnkObjectTy, newEmptyNode(), inheritTypedBuilder, builderRecList)
+    refBuilderObj = newTree(nnkRefTy, builderObj)
+    builderTypDef = newTree(
+      nnkTypeDef, builderTypName, newEmptyNode(), refBuilderObj)
+    typSection = newTree(nnkTypeSection, builderTypDef)
+
+  let newbuilderProcBody = newStmtList()
+
+  newBuilderProcBody.add quote do:
+    var `fields` = newSeq[ArrowField]()
+
+  for i, identDefs in recList:
+    let
+      fieldName = newStrLitNode($identDefs[0][1])
+      fieldType = identDefs[1]
+
+    newbuilderProcBody.add quote do:
+      `fields`.add newArrowField(`fieldName`, TypeTag[`fieldType`]())
+
+  newbuilderProcBody.add quote do:
+    let `castBuilder` = new(`builderTypName`)
+    `castBuilder`.schema = newArrowSchema(`fields`)
+
+  for i, identDefs in recList:
+    let
+      fieldName = identDefs[0][1]
+      fieldType = identDefs[1]
+      newArrayBuilderCall = quote do:
+        newArrowArrayBuilder[`fieldType`]()
+
+      resultDotBuilder = newDotExpr(`castBuilder`, fieldName)
+      assignBuilder = newAssignment(resultDotBuilder, newArrayBuilderCall)
+
+    newbuilderProcBody.add assignBuilder
+
+  newBuilderProcBody.add quote do:
+    cast[`typedBuilder`](`castBuilder`)
+
+  let newbuilderProc = newProc(
+    name = postfix(newbuilderProcName, "*"),
+    params = [typedBuilder, nnkIdentDefs.newTree(tag, typTag, newEmptyNode())],
+    body = newbuilderProcBody
+  )
+
+  let addBody = newStmtList()
+
+  addBody.add quote do:
+    let `castBuilder` = cast[`builderTypName`](`paramBuilder`)
+
+  for i, identDefs in recList:
+    let
+      fieldName = identDefs[0][1]
+      fieldBuilder = newDotExpr(castBuilder, fieldName)
+      fieldAccess = newDotExpr(paramValue, fieldName)
+
+    addBody.add quote do:
+      `fieldBuilder`.add(`fieldAccess`)
+
+  let addProc = newProc(
+    name = postfix(addProcName, "*"),
+    params = [
+      newEmptyNode(),
+      nnkIdentDefs.newTree(paramBuilder, typedBuilder, newEmptyNode()),
+      nnkIdentDefs.newTree(paramValue, typ, newEmptyNode())
+    ],
+    body = addBody
+  )
+
+  let buildBody = newStmtList()
+  buildBody.add quote do:
+    let `castBuilder` = cast[`builderTypName`](`paramBuilder`)
+    let `tblBuilder` = newArrowTableBuilder(`castBuilder`.schema)
+
+  for i, identDefs in recList:
+    let
+      fieldName = identDefs[0][1]
+      fieldBuilder = newDotExpr(castBuilder, fieldName)
+
+    buildBody.add quote do:
+      `tblBuilder`.add(`fieldBuilder`.build)
+
+  buildBody.add quote do:
+    `tblBuilder`.build
+
+  let buildProc = newProc(
+    name = postfix(buildProcName, "*"),
+    params = [
+      ident("ArrowTable"),
+      nnkIdentDefs.newTree(paramBuilder, typedBuilder, newEmptyNode())
+    ],
+    body = buildBody
+  )
+
+  result.add typSection
+  result.add newbuilderProc
+  result.add addProc
+  result.add buildProc

@@ -165,5 +165,3 @@ proc fromParquet*(path: string): ArrowTable =
     raise newException(IOError, $error.message)
 
   newArrowTable(schema, glibTable)
-
-

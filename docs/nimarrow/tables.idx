@@ -19,3 +19,5 @@ schema	nimarrow/tables.html#schema,ArrowTable	tables: schema(table: ArrowTable):
 newArrowTableBuilder	nimarrow/tables.html#newArrowTableBuilder,ArrowSchema	tables: newArrowTableBuilder(schema: ArrowSchema): ArrowTableBuilder	
 add	nimarrow/tables.html#add,ArrowTableBuilder,ArrowArray[T]	tables: add[T](b: ArrowTableBuilder; arr: ArrowArray[T])	
 build	nimarrow/tables.html#build,ArrowTableBuilder	tables: build(b: ArrowTableBuilder): ArrowTable	
+TypedBuilder	nimarrow/tables.html#TypedBuilder	tables: TypedBuilder	
+declareTypedTable	nimarrow/tables.html#declareTypedTable.m,typed	tables: declareTypedTable(typ: typed): untyped	

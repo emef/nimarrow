@@ -111,6 +111,8 @@ function main() {
   valid: bool
   schema: ArrowSchema
   glibArrays: seq[GArrowArrayPtr]">ArrowTableBuilder</a></li>
+  <li><a class="reference" href="#TypedBuilder"
+    title="TypedBuilder[T] = ref object of RootObj">TypedBuilder</a></li>
 
   </ul>
 </li>
@@ -190,6 +192,14 @@ function main() {
 
   </ul>
 </li>
+<li>
+  <a class="reference reference-toplevel" href="#17" id="67">Macros</a>
+  <ul class="simple simple-toc-section">
+      <li><a class="reference" href="#declareTypedTable.m%2Ctyped"
+    title="declareTypedTable(typ: typed): untyped">declareTypedTable</a></li>
+
+  </ul>
+</li>
 
 </ul>
 
@@ -256,6 +266,13 @@ function main() {
   <span class="Identifier">schema</span><span class="Other">:</span> <a href="tables.html#ArrowSchema"><span class="Identifier">ArrowSchema</span></a>
   <span class="Identifier">glibArrays</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">GArrowArrayPtr</span><span class="Other">]</span>
 </pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="TypedBuilder"></a>
+<dt><pre><a href="tables.html#TypedBuilder"><span class="Identifier">TypedBuilder</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <span class="Identifier">RootObj</span></pre></dt>
 <dd>
 
 
@@ -391,6 +408,22 @@ Build the table, invalidating this builder.
 </dd>
 
 </dl></div>
+<div class="section" id="17">
+<h1><a class="toc-backref" href="#17">Macros</a></h1>
+<dl class="item">
+<a id="declareTypedTable.m,typed"></a>
+<dt><pre><span class="Keyword">macro</span> <a href="#declareTypedTable.m%2Ctyped"><span class="Identifier">declareTypedTable</span></a><span class="Other">(</span><span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typed</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dd>
+
+Macro which generates a TypedBuilder[T] for the given type. This generates a few procs to create a new builder, append a T to the table, and build the table.<blockquote><p><pre class="listing"><span class="Keyword">let</span> <span class="Identifier">typedBuilder</span> <span class="Operator">=</span> <span class="Identifier">newTypedBuilder</span><span class="Punctuation">(</span><span class="Identifier">TypeTag</span><span class="Punctuation">[</span><span class="Identifier">MyCustomType</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Punctuation">)</span>
+<span class="Identifier">typedBuilder</span><span class="Operator">.</span><span class="Identifier">add</span> <span class="Identifier">MyCustomType</span><span class="Punctuation">(</span><span class="Operator">...</span><span class="Punctuation">)</span>
+<span class="Identifier">typedBuilder</span><span class="Operator">.</span><span class="Identifier">add</span> <span class="Identifier">MyCustomType</span><span class="Punctuation">(</span><span class="Operator">...</span><span class="Punctuation">)</span>
+<span class="Keyword">let</span> <span class="Identifier">tbl</span> <span class="Operator">=</span> <span class="Identifier">typedBuilder</span><span class="Operator">.</span><span class="Identifier">build</span></pre></p></blockquote>
+
+
+</dd>
+
+</dl></div>
 
   </div>
 </div>
@@ -399,7 +432,7 @@ Build the table, invalidating this builder.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-04 04:57:32 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-05 05:27:34 UTC</small>
       </div>
     </div>
   </div>
