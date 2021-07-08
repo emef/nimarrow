@@ -1,28 +1,9 @@
-import options
+import std/options
 
 import nimarrow_glib
 
+import ./arrays
 import ./tables
-
-runnableExamples:
-  import nimarrow
-  let field1 = newArrowField("a", TypeTag[int32]())
-  let field2 = newArrowField("b", TypeTag[string]())
-
-  let data1 = newArrowArray(@[1'i32, 2'i32, 3'i32])
-  let data2 = newArrowArray(@["first", "second", "third"])
-
-  let schema = newArrowSchema(@[field1, field2])
-
-  let tableBuilder = newArrowTableBuilder(schema)
-  tableBuilder.add data1
-  tableBuilder.add data2
-  let table = tableBuilder.build
-
-  table.toParquet("/tmp/test.parquet")
-
-  let rereadTable = fromParquet("/tmp/test.parquet")
-  echo $rereadTable
 
 type
   ParquetWriterPropsObj = object
@@ -34,6 +15,15 @@ type
     glibWriter: GParquetArrowFileWriterPtr
   ParquetWriter* = ref ParquetWriterObj
 
+  ParquetReaderObj = object
+    schema: ArrowSchema
+    glibReader: GParquetArrowFileReaderPtr
+  ParquetReader* = ref ParquetReaderObj
+
+  TypedParquetWriter*[T] = ref object
+    writer: ParquetWriter
+    tableBuilder: TypedBuilder[T]
+
 proc close*(w: ParquetWriter)
 
 proc `=destroy`*(x: var ParquetWriterPropsObj) =
@@ -43,6 +33,10 @@ proc `=destroy`*(x: var ParquetWriterPropsObj) =
 proc `=destroy`*(x: var ParquetWriterObj) =
   if x.glibWriter != nil:
     gObjectUnref(x.glibWriter)
+
+proc `=destroy`*(x: var ParquetReaderObj) =
+  if x.glibReader != nil:
+    gObjectUnref(x.glibReader)
 
 proc newParquetWriterProps*(
     compression: GArrowCompressionType = GARROW_COMPRESSION_TYPE_SNAPPY,
@@ -100,8 +94,8 @@ proc newParquetWriter*(
 
   ParquetWriter(glibWriter: writer)
 
-proc append*(w: ParquetWriter, table: ArrowTable) =
-  ## Append this table to the parquet file being written.
+proc add*(w: ParquetWriter, table: ArrowTable) =
+  ## Add this table to the parquet file being written.
   doAssert not w.closed
 
   var error: GErrorPtr
@@ -114,7 +108,7 @@ proc append*(w: ParquetWriter, table: ArrowTable) =
     raise newException(IOError, $error.message)
 
   if not success:
-    raise newException(IOError, "Error appending table to parquet writer")
+    raise newException(IOError, "Error adding table to parquet writer")
 
 proc close*(w: ParquetWriter) =
   ## Close the parquet file for writing. NOTE: this MUST be called when
@@ -139,7 +133,7 @@ proc toParquet*(
 ) =
   ## Write this table to a parquet file on the local filesystem at `path`.
   let writer = newParquetWriter(t.schema, path, props)
-  writer.append(t)
+  writer.add(t)
   writer.close()
 
 proc fromParquet*(path: string): ArrowTable =
@@ -165,3 +159,88 @@ proc fromParquet*(path: string): ArrowTable =
     raise newException(IOError, $error.message)
 
   newArrowTable(schema, glibTable)
+
+template newTypedParquetWriterTmpl(
+    T: typedesc[TypeRegistered],
+    path: string,
+    props: Option[ParquetWriterProps] = none(ParquetWriterProps)
+): TypedParquetWriter[T] =
+  block:
+    let typedWriter = new(TypedParquetWriter[T])
+    typedWriter.tableBuilder = newTypedBuilder(T)
+    typedWriter.writer = newParquetWriter(
+      typedWriter.tableBuilder.schema, path, props)
+    typedWriter
+
+proc newTypedParquetWriter*[T: TypeRegistered](
+    path: string,
+    props: Option[ParquetWriterProps] = none(ParquetWriterProps)
+): TypedParquetWriter[T] =
+  ## Create a new typed parquet writer, writing to local path `path`.
+  newTypedParquetWriterTmpl(T, path, props)
+
+proc add*[T](w: TypedParquetWriter[T], x: T) =
+  ## Append an element to the parquet file being written.
+  w.tableBuilder.add x
+
+proc close*[T](w: TypedParquetWriter[T]) =
+  ## Close the parquet file for writing. NOTE: this MUST be called when
+  ## done writing or the file will not be valid! This does not simply
+  ## close the file descriptor, it finalizes the file by writing the parquet
+  ## footer/metadata.
+  w.writer.add w.tableBuilder.build
+  w.writer.close
+
+proc newParquetReader*(path: string, useThreads: bool = true): ParquetReader =
+  ## Create a new parquet reader, reading the local path `path`.
+  var err: GErrorPtr
+  let glibReader = parquetFileReaderNewPath(path, err)
+  if err != nil:
+    defer: gErrorFree(err)
+    raise newException(IOError, $err.message)
+
+  parquetFileReaderSetUseThreads(glibReader, useThreads)
+
+  let glibSchema = parquetFileReaderGetSchema(glibReader, err)
+  if err != nil:
+    defer: gErrorFree(err)
+    raise newException(IOError, $err.message)
+
+  let schema = newArrowSchema(glibSchema)
+
+  ParquetReader(schema: schema, glibReader: glibReader)
+
+proc rowGroups*(r: ParquetReader): int =
+  ## Return the number of row groups in the file being read.
+  parquetFileReaderGetNRowGroups(r.glibReader)
+
+proc read*(r: ParquetReader, rowGroup: int): ArrowTable =
+  ## Read the row group at index `rowGroup` as an ArrowTable.
+  var err: GErrorPtr
+  let glibTable = parquetFileReaderReadRowGroup(
+    r.glibReader, rowGroup, nil, 0, err)
+
+  if err != nil:
+    defer: gErrorFree(err)
+    raise newException(IOError, $err.message)
+
+  newArrowTable(r.schema, glibTable)
+
+proc readFully*(r: ParquetReader): ArrowTable =
+  ## Read the entire parquet file into an ArrowTable.
+  var err: GErrorPtr
+  let glibTable = parquetFileReaderReadTable(r.glibReader, err)
+  if err != nil:
+    defer: gErrorFree(err)
+    raise newException(IOError, $err.message)
+
+  newArrowTable(r.schema, glibTable)
+
+iterator iter*(r: ParquetReader, T: typedesc): T {.inline.} =
+  ## Iterate over the file, converting the rows into the custom type `T`.
+  # TODO: check schema
+  let n = r.rowGroups
+  for i in 0 ..< n:
+    let grp = r.read(i)
+    for x in grp.iter(T):
+      yield x

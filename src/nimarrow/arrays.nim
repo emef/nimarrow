@@ -1,34 +1,9 @@
-import macros
-import options
+import std/macros
+import std/options
 
 import nimarrow_glib
 
 import ./bitarray
-
-## An ArrowArray[T] is simply a 1D array of type T. It manages its
-## own data on the heap in 64byte-aligned buffers to interop with
-## the libarrow-glib c API.
-runnableExamples:
-  import options
-  let arr = newArrowArray[int32](@[1'i32, 2'i32, 3'i32])
-  doAssert arr[0] == 1'i32
-  doAssert @arr == @[1'i32, 2'i32, 3'i32]
-
-  # can take a slice of an existing array, returning a view (no copy).
-  let s = arr[1..3]
-  doAssert @s == @[2'i32, 3'i32]
-
-  # use array builders to avoid creating a copy of the data, .build()
-  # transfers ownership of its buffer into the newly-created array.
-  let builder = newArrowArrayBuilder[int64]()
-  builder.add 1'i64
-  builder.add 2'i64
-  builder.add none(int64)
-  let withNulls = builder.build()
-
-  # nulls show up as 0, must check isNullAt(i)
-  doAssert @withNulls == @[1'i64, 2'i64, 0'i64]
-  doAssert withNulls.isNullAt(2)
 
 type
   ArrowArrayObj[T] = object
@@ -59,11 +34,30 @@ type
 
   ArrowArrayBuilder*[T] = ref ArrowArrayBuilderObj[T]
 
+  ArrowChunkedArrayObj[T] = object
+    glibChunkedArray: GArrowChunkedArrayPtr
+
+  ArrowChunkedArray*[T] = ref ArrowChunkedArrayObj[T]
+
   Bytes* = seq[byte] ## Binary type
 
   TypeTag*[T] = object  ## Empty container used to map generic type T into
                         ## the appropriate glib arrow data type internally.
 
+proc `=destroy`*[T](x: var ArrowArrayObj[T]) =
+  if x.glibArray != nil:
+    gObjectUnref(x.glibArray)
+
+proc `=destroy`*[T](x: var ArrowChunkedArrayObj[T]) =
+  if x.glibChunkedArray != nil:
+    gObjectUnref(x.glibChunkedArray)
+
+proc `=destroy`*[T](x: var WrappedBufferObj[T]) =
+  if x.raw != nil:
+    dealloc(x.raw)
+
+  if x.buf != nil:
+    gObjectUnref(x.buf)
 
 proc isBinary(t: typedesc): bool =
   t is string or t is Bytes
@@ -107,17 +101,6 @@ proc add*[T](builder: ArrowArrayBuilder[T], x: T)
 proc add*[T](builder: ArrowArrayBuilder[T], x: Option[T])
 proc build*[T](builder: ArrowArrayBuilder[T]): ArrowArray[T]
 
-proc `=destroy`*[T](x: var ArrowArrayObj[T]) =
-  if x.glibArray != nil:
-    gObjectUnref(x.glibArray)
-
-proc `=destroy`*[T](x: var WrappedBufferObj[T]) =
-  if x.raw != nil:
-    dealloc(x.raw)
-
-  if x.buf != nil:
-    gObjectUnref(x.buf)
-
 proc copyToBuffer[T](arr: openArray[T]): WrappedBuffer[T] =
   let bytes = ((sizeof(T) * arr.len + 64) / 64).toInt
   let raw = cast[ptr UncheckedArray[T]](alloc(bytes))
@@ -147,7 +130,7 @@ macro DeclareNumericArray(dtype, name: untyped): untyped =
   let
     construct = ident"construct"
     getValue = ident"getValue"
-    getValues = ident"getValues"
+    iter = ident"iter"
     glibArrayNew = arrayNewIdent(name)
     glibGetValue = arrayGetValueIdent(name)
     glibGetValues = arrayGetValuesIdent(name)
@@ -163,12 +146,13 @@ macro DeclareNumericArray(dtype, name: untyped): untyped =
     proc `getValue`(arr: ArrowArray[`dtype`], i: int64): `dtype` =
       `glibGetValue`(arr.glibArray, i)
 
-    proc `getValues`(arr: ArrowArray[`dtype`]): seq[`dtype`] =
+
+    iterator `iter`(arr: ArrowArray[`dtype`]): `dtype` {.inline.} =
       var valuesRead: int64
       let values = `glibGetValues`(arr.glibArray, valuesRead)
 
       for i in 0 .. valuesRead - 1:
-        result.add values[i]
+        yield values[i]
 
 proc convertBytes[T](gbytes: GBytesPtr): T =
   var size: uint64
@@ -187,7 +171,7 @@ macro DeclareBinaryArray(dtype, name: untyped): untyped =
   let
     construct = ident"construct"
     getValue = ident"getValue"
-    getValues = ident"getValues"
+    iter = ident"iter"
     glibArrayNew = arrayNewIdent(name)
 
   result = newStmtList()
@@ -203,13 +187,14 @@ macro DeclareBinaryArray(dtype, name: untyped): untyped =
         let gbytes = binaryArrayGetValue(arr.glibArray, i)
         result = convertBytes[`dtype`](gbytes)
 
-    proc `getValues`(arr: ArrowArray[`dtype`]): seq[`dtype`] =
-      for i in 0 .. arrayGetlength(arr.glibArray) - 1:
+    iterator `iter`(arr: ArrowArray[`dtype`]): `dtype` {.inline.} =
+      var empty: `dtype`
+      let size = arrayGetlength(arr.glibArray)
+      for i in 0 ..< size:
         if arrayIsNull(arr.glibArray, i):
-          var empty: `dtype`
-          result.add(empty)
+          yield empty
         else:
-          result.add(arr.getValue(i))
+          yield arr.getValue(i)
 
 DeclareNumericArray(bool, boolean)
 DeclareNumericArray(int8, int8)
@@ -283,9 +268,15 @@ proc isNullAt*[T](arr: ArrowArray[T], i: int64): bool =
   ## Returns true when the ith element of the array is null.
   arrayIsNull(arr.glibArray, i)
 
+proc toSeq*[T](arr: ArrowArray[T]): seq[T] =
+  ## Converts the arrow array into a seq[T] (creates a copy).
+  result = newSeqOfCap[T](arr.len)
+  for x in arr:
+    result.add x
+
 proc `@`*[T](arr: ArrowArray[T]): seq[T] =
   ## Converts the arrow array into a seq[T] (creates a copy).
-  arr.getValues()
+  arr.toSeq
 
 proc `$`*[T](arr: ArrowArray[T]): string =
   ## Returns the string representation of the array.
@@ -324,6 +315,11 @@ proc `[]`*[T](arr: ArrowArray[T], slice: Slice[int64]): ArrowArray[T] =
   let slice = arraySlice(arr.glibArray, slice.a, sliceLength)
 
   ArrowArray[T](glibArray: slice)
+
+iterator items*[T](arr: ArrowArray[T]): T {.inline.} =
+  ## Iterate over each element in the array.
+  for x in arr.iter():
+    yield x
 
 proc glibPtr*[T](arr: ArrowArray[T]): GArrowArrayPtr =
   ## Access the underlying glib array pointer.
@@ -392,3 +388,97 @@ proc build*[T](builder: ArrowArrayBuilder[T]): ArrowArray[T] =
                             nullBitmapBuf, builder.nNulls)
   builder.valid = false
   builder.data = nil
+
+proc newArrowChunkedArray*[T](
+    glibChunkedArray: GArrowChunkedArrayPtr): ArrowChunkedArray[T] =
+  ## Construct a new chunked array from a glib chunked array pointer.
+  let dtype = chunkedArrayGetValueDataType(glibChunkedArray)
+  defer: gObjectUnref(dtype)
+
+  let expectedDtype = getDataType(TypeTag[T]())
+  defer: gObjectUnref(expectedDtype)
+
+  doAssert dataTypeEqual(dtype, expectedDtype)
+  ArrowChunkedArray[T](glibChunkedArray: glibChunkedArray)
+
+proc len*[T](chunkedArray: ArrowChunkedArray[T]): uint64 =
+  ## Return the number of total elements in the array (across all chunks).
+  chunkedArrayGetNRows(chunkedArray.glibChunkedArray)
+
+proc `$`*[T](chunkedArray: ArrowChunkedArray[T]): string =
+  ## String representation of the chunked array.
+  var err: GErrorPtr
+  let asString = chunkedArrayToString(chunkedArray.glibChunkedArray, err)
+  if err != nil:
+    defer: gErrorFree(err)
+    raise newException(CatchableError, $err.message)
+  else:
+    defer: gfree(asString)
+    $asString
+
+proc toSeq*[T](chunkedArray: ArrowChunkedArray[T]): seq[T] =
+  ## Converts the chunked array into a seq[T] (creates a copy).
+  result = newSeq[T]()
+  for i in 0'u ..< chunkedArray.chunks:
+    result.add @(chunkedArray.chunk(i))
+
+proc `@`*[T](chunkedArray: ArrowChunkedArray[T]): seq[T] =
+  ## Converts the chunked array into a seq[T] (creates a copy).
+  chunkedArray.toSeq
+
+proc `[]`*[T](chunkedArray: ArrowChunkedArray[T], i: int64): T =
+  ## Get the element in the logical array represented by the chunked
+  ## array at index `i`.
+  doAssert uint64(i) < chunkedArray.len
+
+  # TODO: lookup table + binsearch?
+  var c = 0'u
+  var chunk: ArrowArray[T]
+  var offset = 0'i64
+  while true:
+    chunk = chunkedArray.chunk(c)
+    if offset + chunk.len > i:
+      break
+
+    offset += chunk.len
+    c += 1
+
+  chunk[i - offset]
+
+proc `==`*[T](a, b: ArrowChunkedArray[T]): bool =
+  ## Compare two chunked arrays for equality.
+  chunkedArrayEqual(a.glibChunkedArray, b.glibChunkedArray)
+
+proc chunks*[T](chunkedArray: ArrowChunkedArray[T]): uint =
+  ## Return the number of chunks in the chunked array.
+  chunkedArrayGetNChunks(chunkedArray.glibChunkedArray)
+
+proc chunk*[T](chunkedArray: ArrowChunkedArray[T], i: uint): ArrowArray[T] =
+  ## Access the chunk at index `i`.
+  doAssert i < chunkedArray.chunks
+  let glibArray = chunkedArrayGetChunk(chunkedArray.glibChunkedArray, i)
+  doAssert glibArray != nil
+  ArrowArray[T](glibArray: glibArray)
+
+proc combine*[T](chunkedArray: ArrowChunkedArray[T]): ArrowArray[T] =
+  ## Combine all of the chunks in the chunked array into a single array,
+  ## note this creates a copy.
+  doAssert chunkedArray.isCorrectType[T]
+  var err: GErrorPtr
+  let glibArray = chunkedArrayCombine(chunkedArray.glibChunkedArray, err)
+  if err != nil:
+    defer: gErrorFree(err)
+    raise newException(CatchableError, $err.message)
+
+  doAssert glibArray != nil
+
+  ArrowArray[T](glibArray: glibArray)
+
+iterator items*[T](chunkedArray: ArrowChunkedArray[T]): T {.inline.} =
+  ## Iterate over the all of the elements in the logical array represented
+  ## by the chunked array.
+  let chunks = chunkedArray.chunks
+  for i in 0'u ..< chunks:
+    let chunk = chunkedArray.chunk(i)
+    for x in chunk:
+      yield x

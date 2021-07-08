@@ -1,5 +1,5 @@
-import options
-import unittest
+import std/options
+import std/unittest
 
 import nimarrow
 
@@ -79,3 +79,14 @@ test "can construct binary arrays":
   check arr[4] == Bytes(@[])
   check arr.isNullAt(2)
   check not arr.isNullAt(4)
+
+test "can iterate over arrays":
+  let
+    expected = @[1'i32, 2'i32, 3'i32]
+    arr = newArrowArray[int32](expected)
+
+  var rebuilt = newSeq[int32]()
+  for x in arr:
+    rebuilt.add x
+
+  check rebuilt == expected

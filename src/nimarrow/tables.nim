@@ -1,4 +1,4 @@
-import macros
+import std/macros
 
 import nimarrow_glib
 
@@ -14,27 +14,6 @@ import ./arrays
 ## schema. Creating a table does not copy any of the column
 ## data, it will share the internal buffers of the arrays used
 ## to construct it.
-runnableExamples:
-  import nimarrow
-
-  # Schema will be (a: int32, b: string)
-  let field1 = newArrowField("a", TypeTag[int32]())
-  let field2 = newArrowField("b", TypeTag[string]())
-  let schema = newArrowSchema(@[field1, field2])
-
-  # Column data for the described fields in the schema.
-  let data1 = newArrowArray(@[1'i32, 2'i32, 3'i32])
-  let data2 = newArrowArray(@["first", "second", "third"])
-
-  # Add each column to the table in order specified by the schema.
-  let tableBuilder = newArrowTableBuilder(schema)
-  tableBuilder.add data1
-  tableBuilder.add data2
-  let table = tableBuilder.build
-
-  # Convert the table into string representation including
-  # it's metadata and all contents.
-  discard $table
 
 type
   ArrowFieldObj = object
@@ -67,11 +46,14 @@ proc `=destroy`*(x: var ArrowTableObj) =
   if x.glibTable != nil:
     gObjectUnref(x.glibTable)
 
-proc newArrowField*[T](name: string, typeTag: TypeTag[T]): ArrowField =
-  ## Create a new field of type T named `name`.
+proc newArrowField[T](name: string, typeTag: TypeTag[T]): ArrowField =
   let glibDataType = getDataType(typeTag)
   defer: gObjectUnref(glibDataType)
   ArrowField(glibField: fieldNew(name, glibDataType))
+
+proc newArrowField*(name: string, T: typedesc): ArrowField =
+  ## Create a new field of type T named `name`.
+  newArrowFIeld[T](name, TypeTag[T]())
 
 proc glibPtr*(field: ArrowField): GArrowFieldPtr =
   ## Access the underlying glib field pointer.
@@ -125,6 +107,19 @@ proc `==`*(table, other: ArrowTable): bool =
 proc schema*(table: ArrowTable): ArrowSchema =
   table.schema
 
+proc col*(table: ArrowTable, T: typedesc, i: int): ArrowChunkedArray[T] =
+  let glibChunkedArray = tableGetColumnData(table.glibTable, i)
+  doAssert glibChunkedArray != nil
+
+  newArrowChunkedArray[T](glibChunkedArray)
+
+proc col*(table: ArrowTable, T: typedesc, name: string): ArrowChunkedArray[T] =
+  let index = schemaGetFieldIndex(table.schema.glibSchema, name)
+  if index == -1:
+    raise newException(CatchableError, "invalid column " & name)
+
+  table.col(T, index)
+
 proc newArrowTableBuilder*(schema: ArrowSchema): ArrowTableBuilder =
   ## Construct a new table builder for a given schema. Each column
   ## specified in the schema must be added using `add` in order.
@@ -160,18 +155,25 @@ proc build*(b: ArrowTableBuilder): ArrowTable =
 type
   TypedBuilder*[T] = ref object of RootObj
 
-macro declareTypedTable*(typ: typed): untyped =
-  ## Macro which generates a TypedBuilder[T] for the given type.
-  ## This generates a few procs to create a new builder, append
-  ## a T to the table, and build the table.
-  ##
-  ##   .. code-block:: nim
-  ##
-  ##      let typedBuilder = newTypedBuilder(TypeTag[MyCustomType]())
-  ##      typedBuilder.add MyCustomType(...)
-  ##      typedBuilder.add MyCustomType(...)
-  ##      let tbl = typedBuilder.build
-  ##
+  TypeRegistered* {.explain.} = concept b, type T
+    add(TypedBuilder[T], b)
+    schema(TypedBuilder[T]) is ArrowSchema
+    build(TypedBuilder[T]) is ArrowTable
+    newTypedBuilder(T) is TypedBuilder[T]
+    for x in iter(ArrowTable, T):
+      x is T
+
+template newArrowTable*(T: typedesc, ts: openArray[T]): ArrowTable =
+  let typedBuilder = newTypedBuilder(T)
+  typedBuilder.add(ts)
+  typedBuilder.build
+
+proc add*[T](typedBuilder: TypedBuilder[T], ts: openArray[T]) =
+  for t in ts:
+    typedBuilder.add t
+
+macro registerTypedTable*(typ: typedesc): untyped =
+  ## Macro which registers a type to be used in the "Typed" API.
   result = newStmtList()
 
   let
@@ -182,8 +184,11 @@ macro declareTypedTable*(typ: typed): untyped =
     newBuilderProcName = ident("newTypedBuilder")
     addProcName = ident("add")
     buildProcName = ident("build")
+    schemaProcName = ident("schema")
+    iterProcName = ident("iter")
     paramBuilder = ident("builder")
     paramValue = ident("x")
+    paramTable = ident("tbl")
     fields = ident("fields")
     tblBuilder = ident("tblBuilder")
     castBuilder = ident("castBuilder")
@@ -246,7 +251,7 @@ macro declareTypedTable*(typ: typed): untyped =
     cast[`typedBuilder`](`castBuilder`)
 
   let newbuilderProc = newProc(
-    name = postfix(newbuilderProcName, "*"),
+    name = newbuilderProcName,
     params = [typedBuilder, nnkIdentDefs.newTree(tag, typTag, newEmptyNode())],
     body = newbuilderProcBody
   )
@@ -300,7 +305,71 @@ macro declareTypedTable*(typ: typed): untyped =
     body = buildBody
   )
 
+  let schemaBody = quote do:
+    let `castBuilder` = cast[`builderTypName`](`paramBuilder`)
+    `castBuilder`.schema
+
+  let schemaProc = newProc(
+    name = postfix(schemaProcName, "*"),
+    params = [
+      ident("ArrowSchema"),
+      nnkIdentDefs.newTree(paramBuilder, typedBuilder, newEmptyNode())
+    ],
+    body = schemaBody
+  )
+
+  let
+    size = ident("size")
+    iterBody = newStmtList()
+    iterIndex = ident("i")
+    objConstr = newNimNode(nnkObjConstr)
+
+  iterBody.add quote do:
+    let `size` = `paramTable`.len
+
+  objConstr.add ident($typ)
+
+  for i, identDefs in recList:
+    let
+      fieldName = identDefs[0][1]
+      fieldType = ident($(identDefs[1]))
+      arrName = ident($fieldName & "Arr")
+
+    iterBody.add quote do:
+      let `arrName` = @(`paramTable`.col(`fieldType`, `i`))
+
+    objConstr.add newColonExpr(
+      fieldName,
+      nnkBracketExpr.newTree(arrName, iterIndex))
+
+  iterBody.add quote do:
+    for `iterIndex` in 0 ..< `size`:
+      yield `objConstr`
+
+  let iterProc = nnkIteratorDef.newTree(
+    postfix(iterProcName, "*"),
+    newEmptyNode(),
+    newEmptyNode(),
+    nnkFormalParams.newTree(
+      typ,
+      nnkIdentDefs.newTree(paramTable, ident("ArrowTable"), newEmptyNode()),
+      nnkIdentDefs.newTree(tag, typTag, newEmptyNode())
+    ),
+    nnkPragma.newTree(ident("inline")),
+    newEmptyNode(),
+    iterBody
+  )
+
   result.add typSection
   result.add newbuilderProc
   result.add addProc
   result.add buildProc
+  result.add schemaProc
+  result.add iterProc
+
+template newTypedBuilder*(T: typedesc): TypedBuilder[T] =
+  newTypedBuilder(TypeTag[T]())
+
+template iter*(tbl: ArrowTable, T: typedesc): untyped =
+  ## Iterate over the ArrowTable, converting rows into the type `T`.
+  iter(tbl, TypeTag[T]())

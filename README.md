@@ -16,12 +16,13 @@
 
 This library is still a WIP and will be developed alongside the [nimarrow_glib](https://github.com/emef/nimarrow_glib/) library which exposes the libarrow-glib c API.
 
-- [x] arrays
+- [x] arrays (with Option support)
 - [ ] date/timestamp/decimal types
 - [x] tables
 - [x] parquet read/write
+- [x] typed API (without Option support)
+- [ ] typed API (with Option support)
 - [ ] IPC format
-- [ ] cuda
 
 # Code Samples
 
@@ -64,8 +65,8 @@ To construct a table, we use an ArrowTableBuilder which is constructed with the 
 import nimarrow
 
 # Schema will be (a: int32, b: string)
-let field1 = newArrowField("a", TypeTag[int32]())
-let field2 = newArrowField("b", TypeTag[string]())
+let field1 = newArrowField("a", int32)
+let field2 = newArrowField("b", string)
 let schema = newArrowSchema(@[field1, field2])
 
 # Column data for the described fields in the schema.
@@ -83,37 +84,7 @@ let table = tableBuilder.build
 discard $table
 ```
 
-## Typed Tables
-
-It can be cumbersome to build fields, schemas, and arrays by hand in order to
-construct an `ArrowTable`. If we can describe one row of the table as an object, we
-can use a `TypedBuilder` to automate all of that. The macro `declareTypedTable` will
-generate all of the necessary procs for a type `T`. This is best demonstrated with
-an example:
-
-```nim
-type
-  CustomType = object
-    a: int32
-    b: string
-    c: uint8
-
-# macro to generate the TypedBuilder functions for our type.
-declareTypedTable(CustomType)
-
-# construct a new TypedBuilder for our type.
-let typedBuilder = newTypedBuilder(TypeTag[CustomType]())
-
-# append rows to the builder using CustomType objects.
-typedBuilder.add CustomType(a: 0'i32, b: "some string", c: 0'u8)
-typedBuilder.add CustomType(a: 1'i32, b: "another", c: 10'u8)
-typedBuilder.add CustomType(a: 2'i32, b: "three", c: 100'u8)
-
-# construct an ArrowTable from the typedBuilder
-let tbl = typedBuilder.build
-```
-
-## Read/write parquet
+## Basic parquet I/O.
 
 ```nim
 import nimarrow
@@ -128,4 +99,93 @@ table.toParquet("/tmp/test.parquet.snappy", props)
 
 # read a parquet file into an arrow table
 let table = fromParquet("/tmp/test.parquet")
+```
+
+## Typed API
+
+The Typed API provides convenience methods for creating ArrowTables, and
+reading/writing from parquet for a custom nim object. In order to the use
+the typed API the macro `registerTypedTable(T)` must be called for the
+nim object `T`. This generates all of the methods to fulfill the type-registration
+concept and unlocks access to the typed API functions for that type.
+
+Functions generated for the type by `registerTypedTable` do not use any
+runtime-reflection and should roughly match what hand-written versions of
+those functions would look like. Every effort is made to avoid copying data
+needlessly, and as much is inlined as possible. Numeric columns are accessed
+via their raw storage arrays, however strings/binary types do need to be
+copied in order to convert to nim values.
+
+The following conditions must be met for a type to be eligible for registration:
+
+* The object itself is public.
+* All of its fields are public.
+* All of its fields are numeric types, string, or `Bytes`.
+
+Failure to meet these criteria may lead to some strange compile errors when
+running the `registerTypedTable` macro.
+
+#### Register a type for the Typed API
+
+```nim
+type
+  CustomType* = object
+    a*: int32
+    b*: string
+    c*: uint8
+
+registerTypedTable(CustomType)
+```
+
+#### Use a TypedBuilder to construct an ArrowTable from custom objects
+
+```nim
+# construct a new TypedBuilder for our type.
+let typedBuilder = newTypedBuilder(CustomType)
+
+# append rows to the builder using CustomType objects.
+typedBuilder.add CustomType(a: 0'i32, b: "some string", c: 0'u8)
+typedBuilder.add CustomType(a: 1'i32, b: "another", c: 10'u8)
+typedBuilder.add CustomType(a: 2'i32, b: "three", c: 100'u8)
+
+# build an ArrowTable from the typedBuilder.
+let tbl = typedBuilder.build
+```
+
+#### Iterate over a Table, treating each row as a custom object
+
+```nim
+# some ArrowTable with compatible schema of CustomType.
+let tbl: ArrowTable = ...
+
+for x in tbl.iter(CustomType):
+  # x is a CustomType object
+  echo $x
+```
+
+#### Stream custom objects to a parquet file (writer)
+
+```nim
+# create a new typed parquet writer for our custom type.
+let typedWriter = newTypedParquetWriter[CustomType]("/path/to/file.parquet")
+
+# stream records to the parquet file.
+typedWriter.add CustomType(x: 0'i32, y: "y", z: 0'u8)
+typedWriter.add CustomType(x: 0'i32, y: "y", z: 0'u8)
+...
+
+# don't forget to close the parquet file or it will be corrupt!
+typedWriter.close()
+```
+
+#### Stream custom objects from a parquet file (reader)
+
+```nim
+# create a generic parquet reader for a parquet file.
+let reader = newParquetReader("/path/to/file.parquet")
+
+# use the .iter(T) iterator to access each row as a custom type
+for x in reader.iter(CustomType):
+  # x is a CustomType object
+  ...
 ```
