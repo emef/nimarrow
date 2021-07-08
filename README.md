@@ -84,7 +84,7 @@ let table = tableBuilder.build
 discard $table
 ```
 
-## Basic parquet I/O.
+## Basic parquet I/O
 
 ```nim
 import nimarrow
@@ -103,7 +103,7 @@ let table = fromParquet("/tmp/test.parquet")
 
 ## Typed API
 
-The Typed API provides convenience methods for creating ArrowTables, and
+The Typed API provides convenience methods for creating ArrowTables and
 reading/writing from parquet for a custom nim object. In order to the use
 the typed API the macro `registerTypedTable(T)` must be called for the
 nim object `T`. This generates all of the methods to fulfill the type-registration
@@ -118,6 +118,7 @@ copied in order to convert to nim values.
 
 The following conditions must be met for a type to be eligible for registration:
 
+* The object may be an `object` or a `ref object`.
 * The object itself is public.
 * All of its fields are public.
 * All of its fields are numeric types, string, or `Bytes`.
