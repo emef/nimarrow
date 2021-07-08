@@ -106,6 +106,8 @@ function main() {
     title="NullBitmap = BitVector[NullBitmapBase]">NullBitmap</a></li>
   <li><a class="reference" href="#ArrowArrayBuilder"
     title="ArrowArrayBuilder[T] = ref ArrowArrayBuilderObj[T]">ArrowArrayBuilder</a></li>
+  <li><a class="reference" href="#ArrowChunkedArray"
+    title="ArrowChunkedArray[T] = ref ArrowChunkedArrayObj[T]">ArrowChunkedArray</a></li>
   <li><a class="reference" href="#Bytes"
     title="Bytes = seq[byte]">Bytes</a></li>
   <li><a class="reference" href="#TypeTag"
@@ -124,6 +126,8 @@ function main() {
   <ul class="simple nested-toc-section">$
       <li><a class="reference" href="#%24%2CArrowArray%5BT%5D"
     title="`$`[T](arr: ArrowArray[T]): string">$,<wbr>ArrowArray[T]</a></li>
+  <li><a class="reference" href="#%24%2CArrowChunkedArray%5BT%5D"
+    title="`$`[T](chunkedArray: ArrowChunkedArray[T]): string">$,<wbr>ArrowChunkedArray[T]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">newArrowArrayBuilder
@@ -133,36 +137,38 @@ function main() {
   </ul>
   <ul class="simple nested-toc-section">getDataType
       <li><a class="reference" href="#getDataType"
-    title="getDataType(tag`gensym6: TypeTag[bool]): GArrowDataTypePtr">getDataType</a></li>
+    title="getDataType(tag`gensym7: TypeTag[bool]): GArrowDataTypePtr">getDataType</a></li>
   <li><a class="reference" href="#getDataType_2"
-    title="getDataType(tag`gensym8: TypeTag[int8]): GArrowDataTypePtr">getDataType_2</a></li>
+    title="getDataType(tag`gensym9: TypeTag[int8]): GArrowDataTypePtr">getDataType_2</a></li>
   <li><a class="reference" href="#getDataType_3"
-    title="getDataType(tag`gensym10: TypeTag[uint8]): GArrowDataTypePtr">getDataType_3</a></li>
+    title="getDataType(tag`gensym11: TypeTag[uint8]): GArrowDataTypePtr">getDataType_3</a></li>
   <li><a class="reference" href="#getDataType_4"
-    title="getDataType(tag`gensym12: TypeTag[int16]): GArrowDataTypePtr">getDataType_4</a></li>
+    title="getDataType(tag`gensym13: TypeTag[int16]): GArrowDataTypePtr">getDataType_4</a></li>
   <li><a class="reference" href="#getDataType_5"
-    title="getDataType(tag`gensym14: TypeTag[uint16]): GArrowDataTypePtr">getDataType_5</a></li>
+    title="getDataType(tag`gensym15: TypeTag[uint16]): GArrowDataTypePtr">getDataType_5</a></li>
   <li><a class="reference" href="#getDataType_6"
-    title="getDataType(tag`gensym16: TypeTag[int32]): GArrowDataTypePtr">getDataType_6</a></li>
+    title="getDataType(tag`gensym17: TypeTag[int32]): GArrowDataTypePtr">getDataType_6</a></li>
   <li><a class="reference" href="#getDataType_7"
-    title="getDataType(tag`gensym18: TypeTag[uint32]): GArrowDataTypePtr">getDataType_7</a></li>
+    title="getDataType(tag`gensym19: TypeTag[uint32]): GArrowDataTypePtr">getDataType_7</a></li>
   <li><a class="reference" href="#getDataType_8"
-    title="getDataType(tag`gensym20: TypeTag[int64]): GArrowDataTypePtr">getDataType_8</a></li>
+    title="getDataType(tag`gensym21: TypeTag[int64]): GArrowDataTypePtr">getDataType_8</a></li>
   <li><a class="reference" href="#getDataType_9"
-    title="getDataType(tag`gensym22: TypeTag[uint64]): GArrowDataTypePtr">getDataType_9</a></li>
+    title="getDataType(tag`gensym23: TypeTag[uint64]): GArrowDataTypePtr">getDataType_9</a></li>
   <li><a class="reference" href="#getDataType_10"
-    title="getDataType(tag`gensym24: TypeTag[float32]): GArrowDataTypePtr">getDataType_10</a></li>
+    title="getDataType(tag`gensym25: TypeTag[float32]): GArrowDataTypePtr">getDataType_10</a></li>
   <li><a class="reference" href="#getDataType_11"
-    title="getDataType(tag`gensym26: TypeTag[float64]): GArrowDataTypePtr">getDataType_11</a></li>
+    title="getDataType(tag`gensym27: TypeTag[float64]): GArrowDataTypePtr">getDataType_11</a></li>
   <li><a class="reference" href="#getDataType_12"
-    title="getDataType(tag`gensym28: TypeTag[string]): GArrowDataTypePtr">getDataType_12</a></li>
+    title="getDataType(tag`gensym29: TypeTag[string]): GArrowDataTypePtr">getDataType_12</a></li>
   <li><a class="reference" href="#getDataType_13"
-    title="getDataType(tag`gensym31: TypeTag[Bytes]): GArrowDataTypePtr">getDataType_13</a></li>
+    title="getDataType(tag`gensym32: TypeTag[Bytes]): GArrowDataTypePtr">getDataType_13</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">len
       <li><a class="reference" href="#len%2CArrowArray%5BT%5D"
     title="len[T](arr: ArrowArray[T]): int64">len,<wbr>ArrowArray[T]</a></li>
+  <li><a class="reference" href="#len%2CArrowChunkedArray%5BT%5D"
+    title="len[T](chunkedArray: ArrowChunkedArray[T]): uint64">len,<wbr>ArrowChunkedArray[T]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">add
@@ -170,6 +176,19 @@ function main() {
     title="add[T](builder: ArrowArrayBuilder[T]; x: T)">add,<wbr>ArrowArrayBuilder[T],<wbr>T</a></li>
   <li><a class="reference" href="#add%2CArrowArrayBuilder%5BT%5D%2COption%5BT%5D"
     title="add[T](builder: ArrowArrayBuilder[T]; x: Option[T])">add,<wbr>ArrowArrayBuilder[T],<wbr>Option[T]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">toSeq
+      <li><a class="reference" href="#toSeq%2CArrowArray%5BT%5D"
+    title="toSeq[T](arr: ArrowArray[T]): seq[T]">toSeq,<wbr>ArrowArray[T]</a></li>
+  <li><a class="reference" href="#toSeq%2CArrowChunkedArray%5BT%5D"
+    title="toSeq[T](chunkedArray: ArrowChunkedArray[T]): seq[T]">toSeq,<wbr>ArrowChunkedArray[T]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">newArrowChunkedArray
+      <li><a class="reference" href="#newArrowChunkedArray%2CGArrowChunkedArrayPtr"
+    title="newArrowChunkedArray[T](glibChunkedArray: GArrowChunkedArrayPtr): ArrowChunkedArray[
+    T]">newArrowChunkedArray,<wbr>GArrowChunkedArrayPtr</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">newArrowArray
@@ -182,11 +201,15 @@ function main() {
   <ul class="simple nested-toc-section">@
       <li><a class="reference" href="#%40%2CArrowArray%5BT%5D"
     title="`@`[T](arr: ArrowArray[T]): seq[T]">@,<wbr>ArrowArray[T]</a></li>
+  <li><a class="reference" href="#%40%2CArrowChunkedArray%5BT%5D"
+    title="`@`[T](chunkedArray: ArrowChunkedArray[T]): seq[T]">@,<wbr>ArrowChunkedArray[T]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">=destroy
       <li><a class="reference" href="#%3Ddestroy%2CArrowArrayObj%5BT%5D"
     title="`=destroy`[T](x: var ArrowArrayObj[T])">=destroy,<wbr>ArrowArrayObj[T]</a></li>
+  <li><a class="reference" href="#%3Ddestroy%2CArrowChunkedArrayObj%5BT%5D"
+    title="`=destroy`[T](x: var ArrowChunkedArrayObj[T])">=destroy,<wbr>ArrowChunkedArrayObj[T]</a></li>
   <li><a class="reference" href="#%3Ddestroy%2CWrappedBufferObj%5BT%5D"
     title="`=destroy`[T](x: var WrappedBufferObj[T])">=destroy,<wbr>WrappedBufferObj[T]</a></li>
 
@@ -201,9 +224,29 @@ function main() {
     title="newEmptyArrowArray[T](): ArrowArray[T]">newEmptyArrowArray</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">chunk
+      <li><a class="reference" href="#chunk%2CArrowChunkedArray%5BT%5D%2Cuint"
+    title="chunk[T](chunkedArray: ArrowChunkedArray[T]; i: uint): ArrowArray[T]">chunk,<wbr>ArrowChunkedArray[T],<wbr>uint</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">combine
+      <li><a class="reference" href="#combine%2CArrowChunkedArray%5BT%5D"
+    title="combine[T](chunkedArray: ArrowChunkedArray[T]): ArrowArray[T]">combine,<wbr>ArrowChunkedArray[T]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">chunks
+      <li><a class="reference" href="#chunks%2CArrowChunkedArray%5BT%5D"
+    title="chunks[T](chunkedArray: ArrowChunkedArray[T]): uint">chunks,<wbr>ArrowChunkedArray[T]</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">glibPtr
       <li><a class="reference" href="#glibPtr%2CArrowArray%5BT%5D"
     title="glibPtr[T](arr: ArrowArray[T]): GArrowArrayPtr">glibPtr,<wbr>ArrowArray[T]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">==
+      <li><a class="reference" href="#%3D%3D%2CArrowChunkedArray%5BT%5D%2CArrowChunkedArray%5BT%5D"
+    title="`==`[T](a, b: ArrowChunkedArray[T]): bool">==,<wbr>ArrowChunkedArray[T],<wbr>ArrowChunkedArray[T]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">[]
@@ -215,8 +258,20 @@ function main() {
     title="`[]`[T](arr: ArrowArray[T]; slice: Slice[int]): ArrowArray[T]">[],<wbr>ArrowArray[T],<wbr>Slice[int]</a></li>
   <li><a class="reference" href="#%5B%5D%2CArrowArray%5BT%5D%2CSlice%5Bint64%5D"
     title="`[]`[T](arr: ArrowArray[T]; slice: Slice[int64]): ArrowArray[T]">[],<wbr>ArrowArray[T],<wbr>Slice[int64]</a></li>
+  <li><a class="reference" href="#%5B%5D%2CArrowChunkedArray%5BT%5D%2Cint64"
+    title="`[]`[T](chunkedArray: ArrowChunkedArray[T]; i: int64): T">[],<wbr>ArrowChunkedArray[T],<wbr>int64</a></li>
 
   </ul>
+
+  </ul>
+</li>
+<li>
+  <a class="reference reference-toplevel" href="#15" id="65">Iterators</a>
+  <ul class="simple simple-toc-section">
+      <li><a class="reference" href="#items.i%2CArrowArray%5BT%5D"
+    title="items[T](arr: ArrowArray[T]): T">items</a></li>
+  <li><a class="reference" href="#items.i%2CArrowChunkedArray%5BT%5D"
+    title="items[T](chunkedArray: ArrowChunkedArray[T]): T">items</a></li>
 
   </ul>
 </li>
@@ -227,28 +282,7 @@ function main() {
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
   
-  <p class="module-desc">An ArrowArray[T] is simply a 1D array of type T. It manages its own data on the heap in 64byte-aligned buffers to interop with the libarrow-glib c API.
-<p><strong class="examples_text">Example:</strong></p>
-<pre class="listing"><span class="Keyword">import</span><span class="Whitespace"> </span><span class="Identifier">options</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">arr</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowArray</span><span class="Punctuation">[</span><span class="Identifier">int32</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Operator">@</span><span class="Punctuation">[</span><span class="DecNumber">1&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">2&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">3&apos;i32</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Whitespace">
-</span><span class="Identifier">doAssert</span><span class="Whitespace"> </span><span class="Identifier">arr</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Whitespace"> </span><span class="Operator">==</span><span class="Whitespace"> </span><span class="DecNumber">1&apos;i32</span><span class="Whitespace">
-</span><span class="Identifier">doAssert</span><span class="Whitespace"> </span><span class="Operator">@</span><span class="Identifier">arr</span><span class="Whitespace"> </span><span class="Operator">==</span><span class="Whitespace"> </span><span class="Operator">@</span><span class="Punctuation">[</span><span class="DecNumber">1&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">2&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">3&apos;i32</span><span class="Punctuation">]</span><span class="Whitespace">
-
-</span><span class="Comment"># can take a slice of an existing array, returning a view (no copy).</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">s</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">arr</span><span class="Punctuation">[</span><span class="FloatNumber">1.</span><span class="Operator">.</span><span class="DecNumber">3</span><span class="Punctuation">]</span><span class="Whitespace">
-</span><span class="Identifier">doAssert</span><span class="Whitespace"> </span><span class="Operator">@</span><span class="Identifier">s</span><span class="Whitespace"> </span><span class="Operator">==</span><span class="Whitespace"> </span><span class="Operator">@</span><span class="Punctuation">[</span><span class="DecNumber">2&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">3&apos;i32</span><span class="Punctuation">]</span><span class="Whitespace">
-
-</span><span class="Comment"># use array builders to avoid creating a copy of the data, .build()</span><span class="Whitespace">
-</span><span class="Comment"># transfers ownership of its buffer into the newly-created array.</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">builder</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowArrayBuilder</span><span class="Punctuation">[</span><span class="Identifier">int64</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Whitespace">
-</span><span class="Identifier">builder</span><span class="Operator">.</span><span class="Identifier">add</span><span class="Whitespace"> </span><span class="DecNumber">1&apos;i64</span><span class="Whitespace">
-</span><span class="Identifier">builder</span><span class="Operator">.</span><span class="Identifier">add</span><span class="Whitespace"> </span><span class="DecNumber">2&apos;i64</span><span class="Whitespace">
-</span><span class="Identifier">builder</span><span class="Operator">.</span><span class="Identifier">add</span><span class="Whitespace"> </span><span class="Identifier">none</span><span class="Punctuation">(</span><span class="Identifier">int64</span><span class="Punctuation">)</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">withNulls</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">builder</span><span class="Operator">.</span><span class="Identifier">build</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Whitespace">
-
-</span><span class="Comment"># nulls show up as 0, must check isNullAt(i)</span><span class="Whitespace">
-</span><span class="Identifier">doAssert</span><span class="Whitespace"> </span><span class="Operator">@</span><span class="Identifier">withNulls</span><span class="Whitespace"> </span><span class="Operator">==</span><span class="Whitespace"> </span><span class="Operator">@</span><span class="Punctuation">[</span><span class="DecNumber">1&apos;i64</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">2&apos;i64</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">0&apos;i64</span><span class="Punctuation">]</span><span class="Whitespace">
-</span><span class="Identifier">doAssert</span><span class="Whitespace"> </span><span class="Identifier">withNulls</span><span class="Operator">.</span><span class="Identifier">isNullAt</span><span class="Punctuation">(</span><span class="DecNumber">2</span><span class="Punctuation">)</span></pre></p>
+  <p class="module-desc"></p>
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
@@ -273,6 +307,13 @@ function main() {
 </dd>
 <a id="ArrowArrayBuilder"></a>
 <dt><pre><a href="arrays.html#ArrowArrayBuilder"><span class="Identifier">ArrowArrayBuilder</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Identifier">ArrowArrayBuilderObj</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="ArrowChunkedArray"></a>
+<dt><pre><a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Identifier">ArrowChunkedArrayObj</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
 <dd>
 
 
@@ -304,6 +345,13 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 
 </dd>
+<a id="=destroy,ArrowChunkedArrayObj[T]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CArrowChunkedArrayObj%5BT%5D"><span class="Identifier">`=destroy`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">ArrowChunkedArrayObj</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+<dd>
+
+
+
+</dd>
 <a id="=destroy,WrappedBufferObj[T]"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CWrappedBufferObj%5BT%5D"><span class="Identifier">`=destroy`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">WrappedBufferObj</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
 <dd>
@@ -312,7 +360,7 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 </dd>
 <a id="getDataType"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getDataType"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym6</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">bool</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getDataType"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym7</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">bool</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -320,7 +368,7 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 </dd>
 <a id="getDataType_2"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_2"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym8</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">int8</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_2"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym9</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">int8</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -328,7 +376,7 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 </dd>
 <a id="getDataType_3"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_3"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym10</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_3"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym11</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">uint8</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -336,7 +384,7 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 </dd>
 <a id="getDataType_4"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_4"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym12</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">int16</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_4"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym13</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">int16</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -344,7 +392,7 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 </dd>
 <a id="getDataType_5"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_5"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym14</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">uint16</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_5"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym15</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">uint16</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -352,7 +400,7 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 </dd>
 <a id="getDataType_6"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_6"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym16</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_6"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym17</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">int32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -360,7 +408,7 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 </dd>
 <a id="getDataType_7"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_7"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym18</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">uint32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_7"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym19</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">uint32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -368,7 +416,7 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 </dd>
 <a id="getDataType_8"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_8"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym20</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">int64</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_8"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym21</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">int64</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -376,7 +424,7 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 </dd>
 <a id="getDataType_9"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_9"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym22</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">uint64</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_9"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym23</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">uint64</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -384,7 +432,7 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 </dd>
 <a id="getDataType_10"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_10"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym24</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_10"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym25</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">float32</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -392,7 +440,7 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 </dd>
 <a id="getDataType_11"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_11"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym26</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">float64</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_11"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym27</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">float64</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -400,7 +448,7 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 </dd>
 <a id="getDataType_12"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_12"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym28</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_12"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym29</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -408,7 +456,7 @@ Empty container used to map generic type T into the appropriate glib arrow data 
 
 </dd>
 <a id="getDataType_13"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_13"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym31</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">Bytes</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getDataType_13"><span class="Identifier">getDataType</span></a><span class="Other">(</span><span class="Identifier">tag`gensym32</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">Bytes</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">GArrowDataTypePtr</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -448,6 +496,13 @@ Returns the length of the arrow array.
 <dd>
 
 Returns true when the ith element of the array is null.
+
+</dd>
+<a id="toSeq,ArrowArray[T]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#toSeq%2CArrowArray%5BT%5D"><span class="Identifier">toSeq</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">arr</span><span class="Other">:</span> <a href="arrays.html#ArrowArray"><span class="Identifier">ArrowArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+
+Converts the arrow array into a seq[T] (creates a copy).
 
 </dd>
 <a id="@,ArrowArray[T]"></a>
@@ -527,6 +582,96 @@ Add a value or null to the array, none(T) is treated as null.
 Construct an arrow array from the builder's buffer. This does NOT create a copy of the data, and instead transfers ownership of the internal buffer to the array. After this is called, the builder is no longer valid and cannto be mutated.
 
 </dd>
+<a id="newArrowChunkedArray,GArrowChunkedArrayPtr"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#newArrowChunkedArray%2CGArrowChunkedArrayPtr"><span class="Identifier">newArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">glibChunkedArray</span><span class="Other">:</span> <span class="Identifier">GArrowChunkedArrayPtr</span><span class="Other">)</span><span class="Other">:</span> <a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span>
+    <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+
+Construct a new chunked array from a glib chunked array pointer.
+
+</dd>
+<a id="len,ArrowChunkedArray[T]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#len%2CArrowChunkedArray%5BT%5D"><span class="Identifier">len</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">chunkedArray</span><span class="Other">:</span> <a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint64</span></pre></dt>
+<dd>
+
+Return the number of total elements in the array (across all chunks).
+
+</dd>
+<a id="$,ArrowChunkedArray[T]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#%24%2CArrowChunkedArray%5BT%5D"><span class="Identifier">`$`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">chunkedArray</span><span class="Other">:</span> <a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span></pre></dt>
+<dd>
+
+String representation of the chunked array.
+
+</dd>
+<a id="toSeq,ArrowChunkedArray[T]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#toSeq%2CArrowChunkedArray%5BT%5D"><span class="Identifier">toSeq</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">chunkedArray</span><span class="Other">:</span> <a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+
+Converts the chunked array into a seq[T] (creates a copy).
+
+</dd>
+<a id="@,ArrowChunkedArray[T]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#%40%2CArrowChunkedArray%5BT%5D"><span class="Identifier">`@`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">chunkedArray</span><span class="Other">:</span> <a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+
+Converts the chunked array into a seq[T] (creates a copy).
+
+</dd>
+<a id="[],ArrowChunkedArray[T],int64"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CArrowChunkedArray%5BT%5D%2Cint64"><span class="Identifier">`[]`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">chunkedArray</span><span class="Other">:</span> <a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int64</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span></pre></dt>
+<dd>
+
+Get the element in the logical array represented by the chunked array at index <tt class="docutils literal"><span class="pre">i</span></tt>.
+
+</dd>
+<a id="==,ArrowChunkedArray[T],ArrowChunkedArray[T]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#%3D%3D%2CArrowChunkedArray%5BT%5D%2CArrowChunkedArray%5BT%5D"><span class="Identifier">`==`</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
+<dd>
+
+Compare two chunked arrays for equality.
+
+</dd>
+<a id="chunks,ArrowChunkedArray[T]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#chunks%2CArrowChunkedArray%5BT%5D"><span class="Identifier">chunks</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">chunkedArray</span><span class="Other">:</span> <a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">uint</span></pre></dt>
+<dd>
+
+Return the number of chunks in the chunked array.
+
+</dd>
+<a id="chunk,ArrowChunkedArray[T],uint"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#chunk%2CArrowChunkedArray%5BT%5D%2Cuint"><span class="Identifier">chunk</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">chunkedArray</span><span class="Other">:</span> <a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">uint</span><span class="Other">)</span><span class="Other">:</span> <a href="arrays.html#ArrowArray"><span class="Identifier">ArrowArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+
+Access the chunk at index <tt class="docutils literal"><span class="pre">i</span></tt>.
+
+</dd>
+<a id="combine,ArrowChunkedArray[T]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#combine%2CArrowChunkedArray%5BT%5D"><span class="Identifier">combine</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">chunkedArray</span><span class="Other">:</span> <a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="arrays.html#ArrowArray"><span class="Identifier">ArrowArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+
+Combine all of the chunks in the chunked array into a single array, note this creates a copy.
+
+</dd>
+
+</dl></div>
+<div class="section" id="15">
+<h1><a class="toc-backref" href="#15">Iterators</a></h1>
+<dl class="item">
+<a id="items.i,ArrowArray[T]"></a>
+<dt><pre><span class="Keyword">iterator</span> <a href="#items.i%2CArrowArray%5BT%5D"><span class="Identifier">items</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">arr</span><span class="Other">:</span> <a href="arrays.html#ArrowArray"><span class="Identifier">ArrowArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Iterate over each element in the array.
+
+</dd>
+<a id="items.i,ArrowChunkedArray[T]"></a>
+<dt><pre><span class="Keyword">iterator</span> <a href="#items.i%2CArrowChunkedArray%5BT%5D"><span class="Identifier">items</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">chunkedArray</span><span class="Other">:</span> <a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Iterate over the all of the elements in the logical array represented by the chunked array.
+
+</dd>
 
 </dl></div>
 
@@ -537,7 +682,7 @@ Construct an arrow array from the builder's buffer. This does NOT create a copy 
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-05 05:27:34 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-08 21:05:38 UTC</small>
       </div>
     </div>
   </div>

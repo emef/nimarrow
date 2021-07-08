@@ -1,36 +1,51 @@
 ArrowArray	nimarrow/arrays.html#ArrowArray	arrays: ArrowArray	
 NullBitmap	nimarrow/arrays.html#NullBitmap	arrays: NullBitmap	
 ArrowArrayBuilder	nimarrow/arrays.html#ArrowArrayBuilder	arrays: ArrowArrayBuilder	
+ArrowChunkedArray	nimarrow/arrays.html#ArrowChunkedArray	arrays: ArrowChunkedArray	
 Bytes	nimarrow/arrays.html#Bytes	arrays: Bytes	
 TypeTag	nimarrow/arrays.html#TypeTag	arrays: TypeTag	
 `=destroy`	nimarrow/arrays.html#=destroy,ArrowArrayObj[T]	arrays: `=destroy`[T](x: var ArrowArrayObj[T])	
+`=destroy`	nimarrow/arrays.html#=destroy,ArrowChunkedArrayObj[T]	arrays: `=destroy`[T](x: var ArrowChunkedArrayObj[T])	
 `=destroy`	nimarrow/arrays.html#=destroy,WrappedBufferObj[T]	arrays: `=destroy`[T](x: var WrappedBufferObj[T])	
-getDataType	nimarrow/arrays.html#getDataType	arrays: getDataType(tag`gensym6: TypeTag[bool]): GArrowDataTypePtr	
-getDataType	nimarrow/arrays.html#getDataType_2	arrays: getDataType(tag`gensym8: TypeTag[int8]): GArrowDataTypePtr	
-getDataType	nimarrow/arrays.html#getDataType_3	arrays: getDataType(tag`gensym10: TypeTag[uint8]): GArrowDataTypePtr	
-getDataType	nimarrow/arrays.html#getDataType_4	arrays: getDataType(tag`gensym12: TypeTag[int16]): GArrowDataTypePtr	
-getDataType	nimarrow/arrays.html#getDataType_5	arrays: getDataType(tag`gensym14: TypeTag[uint16]): GArrowDataTypePtr	
-getDataType	nimarrow/arrays.html#getDataType_6	arrays: getDataType(tag`gensym16: TypeTag[int32]): GArrowDataTypePtr	
-getDataType	nimarrow/arrays.html#getDataType_7	arrays: getDataType(tag`gensym18: TypeTag[uint32]): GArrowDataTypePtr	
-getDataType	nimarrow/arrays.html#getDataType_8	arrays: getDataType(tag`gensym20: TypeTag[int64]): GArrowDataTypePtr	
-getDataType	nimarrow/arrays.html#getDataType_9	arrays: getDataType(tag`gensym22: TypeTag[uint64]): GArrowDataTypePtr	
-getDataType	nimarrow/arrays.html#getDataType_10	arrays: getDataType(tag`gensym24: TypeTag[float32]): GArrowDataTypePtr	
-getDataType	nimarrow/arrays.html#getDataType_11	arrays: getDataType(tag`gensym26: TypeTag[float64]): GArrowDataTypePtr	
-getDataType	nimarrow/arrays.html#getDataType_12	arrays: getDataType(tag`gensym28: TypeTag[string]): GArrowDataTypePtr	
-getDataType	nimarrow/arrays.html#getDataType_13	arrays: getDataType(tag`gensym31: TypeTag[Bytes]): GArrowDataTypePtr	
+getDataType	nimarrow/arrays.html#getDataType	arrays: getDataType(tag`gensym7: TypeTag[bool]): GArrowDataTypePtr	
+getDataType	nimarrow/arrays.html#getDataType_2	arrays: getDataType(tag`gensym9: TypeTag[int8]): GArrowDataTypePtr	
+getDataType	nimarrow/arrays.html#getDataType_3	arrays: getDataType(tag`gensym11: TypeTag[uint8]): GArrowDataTypePtr	
+getDataType	nimarrow/arrays.html#getDataType_4	arrays: getDataType(tag`gensym13: TypeTag[int16]): GArrowDataTypePtr	
+getDataType	nimarrow/arrays.html#getDataType_5	arrays: getDataType(tag`gensym15: TypeTag[uint16]): GArrowDataTypePtr	
+getDataType	nimarrow/arrays.html#getDataType_6	arrays: getDataType(tag`gensym17: TypeTag[int32]): GArrowDataTypePtr	
+getDataType	nimarrow/arrays.html#getDataType_7	arrays: getDataType(tag`gensym19: TypeTag[uint32]): GArrowDataTypePtr	
+getDataType	nimarrow/arrays.html#getDataType_8	arrays: getDataType(tag`gensym21: TypeTag[int64]): GArrowDataTypePtr	
+getDataType	nimarrow/arrays.html#getDataType_9	arrays: getDataType(tag`gensym23: TypeTag[uint64]): GArrowDataTypePtr	
+getDataType	nimarrow/arrays.html#getDataType_10	arrays: getDataType(tag`gensym25: TypeTag[float32]): GArrowDataTypePtr	
+getDataType	nimarrow/arrays.html#getDataType_11	arrays: getDataType(tag`gensym27: TypeTag[float64]): GArrowDataTypePtr	
+getDataType	nimarrow/arrays.html#getDataType_12	arrays: getDataType(tag`gensym29: TypeTag[string]): GArrowDataTypePtr	
+getDataType	nimarrow/arrays.html#getDataType_13	arrays: getDataType(tag`gensym32: TypeTag[Bytes]): GArrowDataTypePtr	
 newEmptyArrowArray	nimarrow/arrays.html#newEmptyArrowArray	arrays: newEmptyArrowArray[T](): ArrowArray[T]	
 newArrowArray	nimarrow/arrays.html#newArrowArray,openArray[T]	arrays: newArrowArray[T](data: openArray[T]): ArrowArray[T]	
 newArrowArray	nimarrow/arrays.html#newArrowArray,openArray[Option[T]]	arrays: newArrowArray[T](data: openArray[Option[T]]): ArrowArray[T]	
 len	nimarrow/arrays.html#len,ArrowArray[T]	arrays: len[T](arr: ArrowArray[T]): int64	
 isNullAt	nimarrow/arrays.html#isNullAt,ArrowArray[T],int64	arrays: isNullAt[T](arr: ArrowArray[T]; i: int64): bool	
+toSeq	nimarrow/arrays.html#toSeq,ArrowArray[T]	arrays: toSeq[T](arr: ArrowArray[T]): seq[T]	
 `@`	nimarrow/arrays.html#@,ArrowArray[T]	arrays: `@`[T](arr: ArrowArray[T]): seq[T]	
 `$`	nimarrow/arrays.html#$,ArrowArray[T]	arrays: `$`[T](arr: ArrowArray[T]): string	
 `[]`	nimarrow/arrays.html#[],ArrowArray[T],int64	arrays: `[]`[T](arr: ArrowArray[T]; i: int64): T	
 `[]`	nimarrow/arrays.html#[],ArrowArray[T],int	arrays: `[]`[T](arr: ArrowArray[T]; i: int): T	
 `[]`	nimarrow/arrays.html#[],ArrowArray[T],Slice[int]	arrays: `[]`[T](arr: ArrowArray[T]; slice: Slice[int]): ArrowArray[T]	
 `[]`	nimarrow/arrays.html#[],ArrowArray[T],Slice[int64]	arrays: `[]`[T](arr: ArrowArray[T]; slice: Slice[int64]): ArrowArray[T]	
+items	nimarrow/arrays.html#items.i,ArrowArray[T]	arrays: items[T](arr: ArrowArray[T]): T	
 glibPtr	nimarrow/arrays.html#glibPtr,ArrowArray[T]	arrays: glibPtr[T](arr: ArrowArray[T]): GArrowArrayPtr	
 newArrowArrayBuilder	nimarrow/arrays.html#newArrowArrayBuilder	arrays: newArrowArrayBuilder[T](): ArrowArrayBuilder[T]	
 add	nimarrow/arrays.html#add,ArrowArrayBuilder[T],T	arrays: add[T](builder: ArrowArrayBuilder[T]; x: T)	
 add	nimarrow/arrays.html#add,ArrowArrayBuilder[T],Option[T]	arrays: add[T](builder: ArrowArrayBuilder[T]; x: Option[T])	
 build	nimarrow/arrays.html#build,ArrowArrayBuilder[T]	arrays: build[T](builder: ArrowArrayBuilder[T]): ArrowArray[T]	
+newArrowChunkedArray	nimarrow/arrays.html#newArrowChunkedArray,GArrowChunkedArrayPtr	arrays: newArrowChunkedArray[T](glibChunkedArray: GArrowChunkedArrayPtr): ArrowChunkedArray[\n    T]	
+len	nimarrow/arrays.html#len,ArrowChunkedArray[T]	arrays: len[T](chunkedArray: ArrowChunkedArray[T]): uint64	
+`$`	nimarrow/arrays.html#$,ArrowChunkedArray[T]	arrays: `$`[T](chunkedArray: ArrowChunkedArray[T]): string	
+toSeq	nimarrow/arrays.html#toSeq,ArrowChunkedArray[T]	arrays: toSeq[T](chunkedArray: ArrowChunkedArray[T]): seq[T]	
+`@`	nimarrow/arrays.html#@,ArrowChunkedArray[T]	arrays: `@`[T](chunkedArray: ArrowChunkedArray[T]): seq[T]	
+`[]`	nimarrow/arrays.html#[],ArrowChunkedArray[T],int64	arrays: `[]`[T](chunkedArray: ArrowChunkedArray[T]; i: int64): T	
+`==`	nimarrow/arrays.html#==,ArrowChunkedArray[T],ArrowChunkedArray[T]	arrays: `==`[T](a, b: ArrowChunkedArray[T]): bool	
+chunks	nimarrow/arrays.html#chunks,ArrowChunkedArray[T]	arrays: chunks[T](chunkedArray: ArrowChunkedArray[T]): uint	
+chunk	nimarrow/arrays.html#chunk,ArrowChunkedArray[T],uint	arrays: chunk[T](chunkedArray: ArrowChunkedArray[T]; i: uint): ArrowArray[T]	
+combine	nimarrow/arrays.html#combine,ArrowChunkedArray[T]	arrays: combine[T](chunkedArray: ArrowChunkedArray[T]): ArrowArray[T]	
+items	nimarrow/arrays.html#items.i,ArrowChunkedArray[T]	arrays: items[T](chunkedArray: ArrowChunkedArray[T]): T	

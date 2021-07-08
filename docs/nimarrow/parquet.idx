@@ -1,10 +1,21 @@
 ParquetWriterProps	nimarrow/parquet.html#ParquetWriterProps	parquet: ParquetWriterProps	
 ParquetWriter	nimarrow/parquet.html#ParquetWriter	parquet: ParquetWriter	
+ParquetReader	nimarrow/parquet.html#ParquetReader	parquet: ParquetReader	
+TypedParquetWriter	nimarrow/parquet.html#TypedParquetWriter	parquet: TypedParquetWriter	
 `=destroy`	nimarrow/parquet.html#=destroy,ParquetWriterPropsObj	parquet: `=destroy`(x: var ParquetWriterPropsObj)	
 `=destroy`	nimarrow/parquet.html#=destroy,ParquetWriterObj	parquet: `=destroy`(x: var ParquetWriterObj)	
+`=destroy`	nimarrow/parquet.html#=destroy,ParquetReaderObj	parquet: `=destroy`(x: var ParquetReaderObj)	
 newParquetWriterProps	nimarrow/parquet.html#newParquetWriterProps,GArrowCompressionType,bool,Option[int64],Option[int64],Option[int64],Option[int64]	parquet: newParquetWriterProps(compression: GArrowCompressionType = GARROW_COMPRESSION_TYPE_SNAPPY;\n                      enableDictionary: bool = true;\n                      dictionaryPageSizeLimit: Option[int64] = none(int64);\n                      batchSize: Option[int64] = none(int64);\n                      maxRowGroupLength: Option[int64] = none(int64);\n                      dataPageSize: Option[int64] = none(int64)): ParquetWriterProps	
 newParquetWriter	nimarrow/parquet.html#newParquetWriter,ArrowSchema,string,Option[ParquetWriterProps]	parquet: newParquetWriter(schema: ArrowSchema; path: string;\n                 props: Option[ParquetWriterProps] = none(ParquetWriterProps)): ParquetWriter	
-append	nimarrow/parquet.html#append,ParquetWriter,ArrowTable	parquet: append(w: ParquetWriter; table: ArrowTable)	
+add	nimarrow/parquet.html#add,ParquetWriter,ArrowTable	parquet: add(w: ParquetWriter; table: ArrowTable)	
 close	nimarrow/parquet.html#close,ParquetWriter	parquet: close(w: ParquetWriter)	
 toParquet	nimarrow/parquet.html#toParquet,ArrowTable,string,Option[ParquetWriterProps]	parquet: toParquet(t: ArrowTable; path: string;\n          props: Option[ParquetWriterProps] = none(ParquetWriterProps))	
 fromParquet	nimarrow/parquet.html#fromParquet,string	parquet: fromParquet(path: string): ArrowTable	
+newTypedParquetWriter	nimarrow/parquet.html#newTypedParquetWriter,string,Option[ParquetWriterProps]	parquet: newTypedParquetWriter[T: TypeRegistered](path: string;\n    props: Option[ParquetWriterProps] = none(ParquetWriterProps)): TypedParquetWriter[\n    T]	
+add	nimarrow/parquet.html#add,TypedParquetWriter[T],T	parquet: add[T](w: TypedParquetWriter[T]; x: T)	
+close	nimarrow/parquet.html#close,TypedParquetWriter[T]	parquet: close[T](w: TypedParquetWriter[T])	
+newParquetReader	nimarrow/parquet.html#newParquetReader,string,bool	parquet: newParquetReader(path: string; useThreads: bool = true): ParquetReader	
+rowGroups	nimarrow/parquet.html#rowGroups,ParquetReader	parquet: rowGroups(r: ParquetReader): int	
+read	nimarrow/parquet.html#read,ParquetReader,int	parquet: read(r: ParquetReader; rowGroup: int): ArrowTable	
+readFully	nimarrow/parquet.html#readFully,ParquetReader	parquet: readFully(r: ParquetReader): ArrowTable	
+iter	nimarrow/parquet.html#iter.i,ParquetReader,typedesc	parquet: iter(r: ParquetReader; T: typedesc): T:type	

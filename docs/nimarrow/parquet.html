@@ -104,20 +104,30 @@ function main() {
     title="ParquetWriterProps = ref ParquetWriterPropsObj">ParquetWriterProps</a></li>
   <li><a class="reference" href="#ParquetWriter"
     title="ParquetWriter = ref ParquetWriterObj">ParquetWriter</a></li>
+  <li><a class="reference" href="#ParquetReader"
+    title="ParquetReader = ref ParquetReaderObj">ParquetReader</a></li>
+  <li><a class="reference" href="#TypedParquetWriter"
+    title="TypedParquetWriter[T] = ref object
+  writer: ParquetWriter
+  tableBuilder: TypedBuilder[T]">TypedParquetWriter</a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">close
-      <li><a class="reference" href="#close%2CParquetWriter"
-    title="close(w: ParquetWriter)">close,<wbr>ParquetWriter</a></li>
+      <ul class="simple nested-toc-section">newTypedParquetWriter
+      <li><a class="reference" href="#newTypedParquetWriter%2Cstring%2COption%5BParquetWriterProps%5D"
+    title="newTypedParquetWriter[T: TypeRegistered](path: string;
+    props: Option[ParquetWriterProps] = none(ParquetWriterProps)): TypedParquetWriter[
+    T]">newTypedParquetWriter,<wbr>string,<wbr>Option[ParquetWriterProps]</a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">append
-      <li><a class="reference" href="#append%2CParquetWriter%2CArrowTable"
-    title="append(w: ParquetWriter; table: ArrowTable)">append,<wbr>ParquetWriter,<wbr>ArrowTable</a></li>
+  <ul class="simple nested-toc-section">close
+      <li><a class="reference" href="#close%2CParquetWriter"
+    title="close(w: ParquetWriter)">close,<wbr>ParquetWriter</a></li>
+  <li><a class="reference" href="#close%2CTypedParquetWriter%5BT%5D"
+    title="close[T](w: TypedParquetWriter[T])">close,<wbr>TypedParquetWriter[T]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">fromParquet
@@ -135,10 +145,32 @@ function main() {
                       dataPageSize: Option[int64] = none(int64)): ParquetWriterProps">newParquetWriterProps,<wbr>GArrowCompressionType,<wbr>bool,<wbr>Option[int64],<wbr>Option[int64],<wbr>Option[int64],<wbr>Option[int64]</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">newParquetReader
+      <li><a class="reference" href="#newParquetReader%2Cstring%2Cbool"
+    title="newParquetReader(path: string; useThreads: bool = true): ParquetReader">newParquetReader,<wbr>string,<wbr>bool</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">add
+      <li><a class="reference" href="#add%2CParquetWriter%2CArrowTable"
+    title="add(w: ParquetWriter; table: ArrowTable)">add,<wbr>ParquetWriter,<wbr>ArrowTable</a></li>
+  <li><a class="reference" href="#add%2CTypedParquetWriter%5BT%5D%2CT"
+    title="add[T](w: TypedParquetWriter[T]; x: T)">add,<wbr>TypedParquetWriter[T],<wbr>T</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">rowGroups
+      <li><a class="reference" href="#rowGroups%2CParquetReader"
+    title="rowGroups(r: ParquetReader): int">rowGroups,<wbr>ParquetReader</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">toParquet
       <li><a class="reference" href="#toParquet%2CArrowTable%2Cstring%2COption%5BParquetWriterProps%5D"
     title="toParquet(t: ArrowTable; path: string;
           props: Option[ParquetWriterProps] = none(ParquetWriterProps))">toParquet,<wbr>ArrowTable,<wbr>string,<wbr>Option[ParquetWriterProps]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">read
+      <li><a class="reference" href="#read%2CParquetReader%2Cint"
+    title="read(r: ParquetReader; rowGroup: int): ArrowTable">read,<wbr>ParquetReader,<wbr>int</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">=destroy
@@ -146,6 +178,8 @@ function main() {
     title="`=destroy`(x: var ParquetWriterPropsObj)">=destroy,<wbr>ParquetWriterPropsObj</a></li>
   <li><a class="reference" href="#%3Ddestroy%2CParquetWriterObj"
     title="`=destroy`(x: var ParquetWriterObj)">=destroy,<wbr>ParquetWriterObj</a></li>
+  <li><a class="reference" href="#%3Ddestroy%2CParquetReaderObj"
+    title="`=destroy`(x: var ParquetReaderObj)">=destroy,<wbr>ParquetReaderObj</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">newParquetWriter
@@ -154,6 +188,19 @@ function main() {
                  props: Option[ParquetWriterProps] = none(ParquetWriterProps)): ParquetWriter">newParquetWriter,<wbr>ArrowSchema,<wbr>string,<wbr>Option[ParquetWriterProps]</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">readFully
+      <li><a class="reference" href="#readFully%2CParquetReader"
+    title="readFully(r: ParquetReader): ArrowTable">readFully,<wbr>ParquetReader</a></li>
+
+  </ul>
+
+  </ul>
+</li>
+<li>
+  <a class="reference reference-toplevel" href="#15" id="65">Iterators</a>
+  <ul class="simple simple-toc-section">
+      <li><a class="reference" href="#iter.i%2CParquetReader%2Ctypedesc"
+    title="iter(r: ParquetReader; T: typedesc): T:type">iter</a></li>
 
   </ul>
 </li>
@@ -164,30 +211,11 @@ function main() {
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
   
-  <p class="module-desc">
-<p><strong class="examples_text">Example:</strong></p>
-<pre class="listing"><span class="Keyword">import</span><span class="Whitespace"> </span><span class="Identifier">nimarrow</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">field1</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowField</span><span class="Punctuation">(</span><span class="StringLit">&quot;a&quot;</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="Identifier">TypeTag</span><span class="Punctuation">[</span><span class="Identifier">int32</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Punctuation">)</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">field2</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowField</span><span class="Punctuation">(</span><span class="StringLit">&quot;b&quot;</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="Identifier">TypeTag</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Punctuation">)</span><span class="Whitespace">
-
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">data1</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowArray</span><span class="Punctuation">(</span><span class="Operator">@</span><span class="Punctuation">[</span><span class="DecNumber">1&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">2&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">3&apos;i32</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">data2</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowArray</span><span class="Punctuation">(</span><span class="Operator">@</span><span class="Punctuation">[</span><span class="StringLit">&quot;first&quot;</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="StringLit">&quot;second&quot;</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="StringLit">&quot;third&quot;</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Whitespace">
-
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">schema</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowSchema</span><span class="Punctuation">(</span><span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">field1</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="Identifier">field2</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Whitespace">
-
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">tableBuilder</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowTableBuilder</span><span class="Punctuation">(</span><span class="Identifier">schema</span><span class="Punctuation">)</span><span class="Whitespace">
-</span><span class="Identifier">tableBuilder</span><span class="Operator">.</span><span class="Identifier">add</span><span class="Whitespace"> </span><span class="Identifier">data1</span><span class="Whitespace">
-</span><span class="Identifier">tableBuilder</span><span class="Operator">.</span><span class="Identifier">add</span><span class="Whitespace"> </span><span class="Identifier">data2</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">table</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">tableBuilder</span><span class="Operator">.</span><span class="Identifier">build</span><span class="Whitespace">
-
-</span><span class="Identifier">table</span><span class="Operator">.</span><span class="Identifier">toParquet</span><span class="Punctuation">(</span><span class="StringLit">&quot;/tmp/test.parquet&quot;</span><span class="Punctuation">)</span><span class="Whitespace">
-
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">rereadTable</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">fromParquet</span><span class="Punctuation">(</span><span class="StringLit">&quot;/tmp/test.parquet&quot;</span><span class="Punctuation">)</span><span class="Whitespace">
-</span><span class="Identifier">echo</span><span class="Whitespace"> </span><span class="Operator">$</span><span class="Identifier">rereadTable</span></pre></p>
+  <p class="module-desc"></p>
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="tables.html">tables</a>
+<a class="reference external" href="arrays.html">arrays</a>, <a class="reference external" href="tables.html">tables</a>
 </dl></div>
 <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
@@ -201,6 +229,23 @@ function main() {
 </dd>
 <a id="ParquetWriter"></a>
 <dt><pre><a href="parquet.html#ParquetWriter"><span class="Identifier">ParquetWriter</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Identifier">ParquetWriterObj</span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="ParquetReader"></a>
+<dt><pre><a href="parquet.html#ParquetReader"><span class="Identifier">ParquetReader</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Identifier">ParquetReaderObj</span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="TypedParquetWriter"></a>
+<dt><pre><a href="parquet.html#TypedParquetWriter"><span class="Identifier">TypedParquetWriter</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
+  <span class="Identifier">writer</span><span class="Other">:</span> <a href="parquet.html#ParquetWriter"><span class="Identifier">ParquetWriter</span></a>
+  <span class="Identifier">tableBuilder</span><span class="Other">:</span> <a href="tables.html#TypedBuilder"><span class="Identifier">TypedBuilder</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span>
+</pre></dt>
 <dd>
 
 
@@ -220,6 +265,13 @@ function main() {
 </dd>
 <a id="=destroy,ParquetWriterObj"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CParquetWriterObj"><span class="Identifier">`=destroy`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">ParquetWriterObj</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="=destroy,ParquetReaderObj"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#%3Ddestroy%2CParquetReaderObj"><span class="Identifier">`=destroy`</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">ParquetReaderObj</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -247,11 +299,11 @@ Construct a new parquet writer properties object, optionally overriding the defa
 Construct a new parquet writer which will write to the local file at <tt class="docutils literal"><span class="pre">path</span></tt>.
 
 </dd>
-<a id="append,ParquetWriter,ArrowTable"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#append%2CParquetWriter%2CArrowTable"><span class="Identifier">append</span></a><span class="Other">(</span><span class="Identifier">w</span><span class="Other">:</span> <a href="parquet.html#ParquetWriter"><span class="Identifier">ParquetWriter</span></a><span class="Other">;</span> <span class="Identifier">table</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="add,ParquetWriter,ArrowTable"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#add%2CParquetWriter%2CArrowTable"><span class="Identifier">add</span></a><span class="Other">(</span><span class="Identifier">w</span><span class="Other">:</span> <a href="parquet.html#ParquetWriter"><span class="Identifier">ParquetWriter</span></a><span class="Other">;</span> <span class="Identifier">table</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-Append this table to the parquet file being written.
+Add this table to the parquet file being written.
 
 </dd>
 <a id="close,ParquetWriter"></a>
@@ -277,6 +329,71 @@ Write this table to a parquet file on the local filesystem at <tt class="docutil
 Read a parquet file from the local filesystem at <tt class="docutils literal"><span class="pre">path</span></tt> into a Table.
 
 </dd>
+<a id="newTypedParquetWriter,string,Option[ParquetWriterProps]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#newTypedParquetWriter%2Cstring%2COption%5BParquetWriterProps%5D"><span class="Identifier">newTypedParquetWriter</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <a href="tables.html#TypeRegistered"><span class="Identifier">TypeRegistered</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span>
+    <span class="Identifier">props</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><a href="parquet.html#ParquetWriterProps"><span class="Identifier">ParquetWriterProps</span></a><span class="Other">]</span> <span class="Other">=</span> <span class="Identifier">none</span><span class="Other">(</span><a href="parquet.html#ParquetWriterProps"><span class="Identifier">ParquetWriterProps</span></a><span class="Other">)</span><span class="Other">)</span><span class="Other">:</span> <a href="parquet.html#TypedParquetWriter"><span class="Identifier">TypedParquetWriter</span></a><span class="Other">[</span>
+    <span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+
+Create a new typed parquet writer, writing to local path <tt class="docutils literal"><span class="pre">path</span></tt>.
+
+</dd>
+<a id="add,TypedParquetWriter[T],T"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#add%2CTypedParquetWriter%5BT%5D%2CT"><span class="Identifier">add</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">w</span><span class="Other">:</span> <a href="parquet.html#TypedParquetWriter"><span class="Identifier">TypedParquetWriter</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
+<dd>
+
+Append an element to the parquet file being written.
+
+</dd>
+<a id="close,TypedParquetWriter[T]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#close%2CTypedParquetWriter%5BT%5D"><span class="Identifier">close</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">w</span><span class="Other">:</span> <a href="parquet.html#TypedParquetWriter"><span class="Identifier">TypedParquetWriter</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+<dd>
+
+Close the parquet file for writing. NOTE: this MUST be called when done writing or the file will not be valid! This does not simply close the file descriptor, it finalizes the file by writing the parquet footer/metadata.
+
+</dd>
+<a id="newParquetReader,string,bool"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#newParquetReader%2Cstring%2Cbool"><span class="Identifier">newParquetReader</span></a><span class="Other">(</span><span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">useThreads</span><span class="Other">:</span> <span class="Identifier">bool</span> <span class="Other">=</span> <span class="Identifier">true</span><span class="Other">)</span><span class="Other">:</span> <a href="parquet.html#ParquetReader"><span class="Identifier">ParquetReader</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Create a new parquet reader, reading the local path <tt class="docutils literal"><span class="pre">path</span></tt>.
+
+</dd>
+<a id="rowGroups,ParquetReader"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#rowGroups%2CParquetReader"><span class="Identifier">rowGroups</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="parquet.html#ParquetReader"><span class="Identifier">ParquetReader</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Return the number of row groups in the file being read.
+
+</dd>
+<a id="read,ParquetReader,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#read%2CParquetReader%2Cint"><span class="Identifier">read</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="parquet.html#ParquetReader"><span class="Identifier">ParquetReader</span></a><span class="Other">;</span> <span class="Identifier">rowGroup</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Read the row group at index <tt class="docutils literal"><span class="pre">rowGroup</span></tt> as an ArrowTable.
+
+</dd>
+<a id="readFully,ParquetReader"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#readFully%2CParquetReader"><span class="Identifier">readFully</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="parquet.html#ParquetReader"><span class="Identifier">ParquetReader</span></a><span class="Other">)</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Read the entire parquet file into an ArrowTable.
+
+</dd>
+
+</dl></div>
+<div class="section" id="15">
+<h1><a class="toc-backref" href="#15">Iterators</a></h1>
+<dl class="item">
+<a id="iter.i,ParquetReader,typedesc"></a>
+<dt><pre><span class="Keyword">iterator</span> <a href="#iter.i%2CParquetReader%2Ctypedesc"><span class="Identifier">iter</span></a><span class="Other">(</span><span class="Identifier">r</span><span class="Other">:</span> <a href="parquet.html#ParquetReader"><span class="Identifier">ParquetReader</span></a><span class="Other">;</span> <span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T:type</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">inline</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Iterate over the file, converting the rows into the custom type <tt class="docutils literal"><span class="pre">T</span></tt>.
+
+</dd>
 
 </dl></div>
 
@@ -287,7 +404,7 @@ Read a parquet file from the local filesystem at <tt class="docutils literal"><s
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-05 05:27:34 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-08 21:05:38 UTC</small>
       </div>
     </div>
   </div>

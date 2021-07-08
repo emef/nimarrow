@@ -113,6 +113,14 @@ function main() {
   glibArrays: seq[GArrowArrayPtr]">ArrowTableBuilder</a></li>
   <li><a class="reference" href="#TypedBuilder"
     title="TypedBuilder[T] = ref object of RootObj">TypedBuilder</a></li>
+  <li><a class="reference" href="#TypeRegistered"
+    title="TypeRegistered {.explain.} = concept btypeof(T)
+    add(TypedBuilder[T], b)
+    schema(TypedBuilder[T]) is ArrowSchema
+    build(TypedBuilder[T]) is ArrowTable
+    newTypedBuilder(T) is TypedBuilder[T]
+    for x in iter(ArrowTable, T):
+      x is T">TypeRegistered</a></li>
 
   </ul>
 </li>
@@ -130,8 +138,8 @@ function main() {
 
   </ul>
   <ul class="simple nested-toc-section">newArrowField
-      <li><a class="reference" href="#newArrowField%2Cstring%2CTypeTag%5BT%5D"
-    title="newArrowField[T](name: string; typeTag: TypeTag[T]): ArrowField">newArrowField,<wbr>string,<wbr>TypeTag[T]</a></li>
+      <li><a class="reference" href="#newArrowField%2Cstring%2Ctypedesc"
+    title="newArrowField(name: string; T: typedesc): ArrowField">newArrowField,<wbr>string,<wbr>typedesc</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">newArrowSchema
@@ -154,6 +162,8 @@ function main() {
   <ul class="simple nested-toc-section">add
       <li><a class="reference" href="#add%2CArrowTableBuilder%2CArrowArray%5BT%5D"
     title="add[T](b: ArrowTableBuilder; arr: ArrowArray[T])">add,<wbr>ArrowTableBuilder,<wbr>ArrowArray[T]</a></li>
+  <li><a class="reference" href="#add%2CTypedBuilder%5BT%5D%2CopenArray%5BT%5D"
+    title="add[T](typedBuilder: TypedBuilder[T]; ts: openArray[T])">add,<wbr>TypedBuilder[T],<wbr>openArray[T]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">=destroy
@@ -189,14 +199,33 @@ function main() {
     title="`==`(table, other: ArrowTable): bool">==,<wbr>ArrowTable,<wbr>ArrowTable</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">col
+      <li><a class="reference" href="#col%2CArrowTable%2Ctypedesc%2Cint"
+    title="col(table: ArrowTable; T: typedesc; i: int): ArrowChunkedArray[T]">col,<wbr>ArrowTable,<wbr>typedesc,<wbr>int</a></li>
+  <li><a class="reference" href="#col%2CArrowTable%2Ctypedesc%2Cstring"
+    title="col(table: ArrowTable; T: typedesc; name: string): ArrowChunkedArray[T]">col,<wbr>ArrowTable,<wbr>typedesc,<wbr>string</a></li>
+
+  </ul>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#17" id="67">Macros</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#declareTypedTable.m%2Ctyped"
-    title="declareTypedTable(typ: typed): untyped">declareTypedTable</a></li>
+      <li><a class="reference" href="#registerTypedTable.m%2Ctypedesc"
+    title="registerTypedTable(typ: typedesc): untyped">registerTypedTable</a></li>
+
+  </ul>
+</li>
+<li>
+  <a class="reference reference-toplevel" href="#18" id="68">Templates</a>
+  <ul class="simple simple-toc-section">
+      <li><a class="reference" href="#newArrowTable.t%2Ctypedesc%2CopenArray%5Btypedesc%5D"
+    title="newArrowTable(T: typedesc; ts: openArray[T:type]): ArrowTable">newArrowTable</a></li>
+  <li><a class="reference" href="#newTypedBuilder.t%2Ctypedesc"
+    title="newTypedBuilder(T: typedesc): TypedBuilder[T]">newTypedBuilder</a></li>
+  <li><a class="reference" href="#iter.t%2CArrowTable%2Ctypedesc"
+    title="iter(tbl: ArrowTable; T: typedesc): untyped">iter</a></li>
 
   </ul>
 </li>
@@ -209,28 +238,7 @@ function main() {
   
   <p class="module-desc"><p>An ArrowTable is an ordered collection of named arrays (columns). Each column name and type is described by its ArrowField, and an ArrowSchema describes all of the columns in a table.</p>
 <p>To construct a table, we use an ArrowTableBuilder which is constructed with the intended schema. Each column's data must then be added to the builder in the order specified by the schema. Creating a table does not copy any of the column data, it will share the internal buffers of the arrays used to construct it.</p>
-
-<p><strong class="examples_text">Example:</strong></p>
-<pre class="listing"><span class="Keyword">import</span><span class="Whitespace"> </span><span class="Identifier">nimarrow</span><span class="Whitespace">
-
-</span><span class="Comment"># Schema will be (a: int32, b: string)</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">field1</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowField</span><span class="Punctuation">(</span><span class="StringLit">&quot;a&quot;</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="Identifier">TypeTag</span><span class="Punctuation">[</span><span class="Identifier">int32</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Punctuation">)</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">field2</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowField</span><span class="Punctuation">(</span><span class="StringLit">&quot;b&quot;</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="Identifier">TypeTag</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Punctuation">)</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">schema</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowSchema</span><span class="Punctuation">(</span><span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">field1</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="Identifier">field2</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Whitespace">
-
-</span><span class="Comment"># Column data for the described fields in the schema.</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">data1</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowArray</span><span class="Punctuation">(</span><span class="Operator">@</span><span class="Punctuation">[</span><span class="DecNumber">1&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">2&apos;i32</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="DecNumber">3&apos;i32</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">data2</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowArray</span><span class="Punctuation">(</span><span class="Operator">@</span><span class="Punctuation">[</span><span class="StringLit">&quot;first&quot;</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="StringLit">&quot;second&quot;</span><span class="Punctuation">,</span><span class="Whitespace"> </span><span class="StringLit">&quot;third&quot;</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Whitespace">
-
-</span><span class="Comment"># Add each column to the table in order specified by the schema.</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">tableBuilder</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">newArrowTableBuilder</span><span class="Punctuation">(</span><span class="Identifier">schema</span><span class="Punctuation">)</span><span class="Whitespace">
-</span><span class="Identifier">tableBuilder</span><span class="Operator">.</span><span class="Identifier">add</span><span class="Whitespace"> </span><span class="Identifier">data1</span><span class="Whitespace">
-</span><span class="Identifier">tableBuilder</span><span class="Operator">.</span><span class="Identifier">add</span><span class="Whitespace"> </span><span class="Identifier">data2</span><span class="Whitespace">
-</span><span class="Keyword">let</span><span class="Whitespace"> </span><span class="Identifier">table</span><span class="Whitespace"> </span><span class="Operator">=</span><span class="Whitespace"> </span><span class="Identifier">tableBuilder</span><span class="Operator">.</span><span class="Identifier">build</span><span class="Whitespace">
-
-</span><span class="Comment"># Convert the table into string representation including</span><span class="Whitespace">
-</span><span class="Comment"># it&apos;s metadata and all contents.</span><span class="Whitespace">
-</span><span class="Keyword">discard</span><span class="Whitespace"> </span><span class="Operator">$</span><span class="Identifier">table</span></pre></p>
+</p>
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
@@ -278,6 +286,19 @@ function main() {
 
 
 </dd>
+<a id="TypeRegistered"></a>
+<dt><pre><a href="tables.html#TypeRegistered"><span class="Identifier">TypeRegistered</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">explain</span></span><span class="Other">.}</span></span> <span class="Other">=</span> <span class="Keyword">concept</span> <span class="Identifier">b</span><span class="Keyword">typeof</span><span class="Other">(</span><span class="Identifier">T</span><span class="Other">)</span>
+    <span class="Identifier">add</span><span class="Other">(</span><a href="tables.html#TypedBuilder"><span class="Identifier">TypedBuilder</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">)</span>
+    <span class="Identifier">schema</span><span class="Other">(</span><a href="tables.html#TypedBuilder"><span class="Identifier">TypedBuilder</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span> <span class="Identifier">is</span> <a href="tables.html#ArrowSchema"><span class="Identifier">ArrowSchema</span></a>
+    <span class="Identifier">build</span><span class="Other">(</span><a href="tables.html#TypedBuilder"><span class="Identifier">TypedBuilder</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span> <span class="Identifier">is</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a>
+    <span class="Identifier">newTypedBuilder</span><span class="Other">(</span><span class="Identifier">T</span><span class="Other">)</span> <span class="Identifier">is</span> <a href="tables.html#TypedBuilder"><span class="Identifier">TypedBuilder</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span>
+    <span class="Keyword">for</span> <span class="Identifier">x</span> <span class="Keyword">in</span> <span class="Identifier">iter</span><span class="Other">(</span><a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">)</span><span class="Other">:</span>
+      <span class="Identifier">x</span> <span class="Identifier">is</span> <span class="Identifier">T</span></pre></dt>
+<dd>
+
+
+
+</dd>
 
 </dl></div>
 <div class="section" id="12">
@@ -304,8 +325,8 @@ function main() {
 
 
 </dd>
-<a id="newArrowField,string,TypeTag[T]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#newArrowField%2Cstring%2CTypeTag%5BT%5D"><span class="Identifier">newArrowField</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">typeTag</span><span class="Other">:</span> <a href="arrays.html#TypeTag"><span class="Identifier">TypeTag</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="tables.html#ArrowField"><span class="Identifier">ArrowField</span></a></pre></dt>
+<a id="newArrowField,string,typedesc"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#newArrowField%2Cstring%2Ctypedesc"><span class="Identifier">newArrowField</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <a href="tables.html#ArrowField"><span class="Identifier">ArrowField</span></a></pre></dt>
 <dd>
 
 Create a new field of type T named <tt class="docutils literal"><span class="pre">name</span></tt>.
@@ -384,6 +405,20 @@ String representation of the table's schema and full contents.
 
 
 </dd>
+<a id="col,ArrowTable,typedesc,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#col%2CArrowTable%2Ctypedesc%2Cint"><span class="Identifier">col</span></a><span class="Other">(</span><span class="Identifier">table</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">;</span> <span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="col,ArrowTable,typedesc,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#col%2CArrowTable%2Ctypedesc%2Cstring"><span class="Identifier">col</span></a><span class="Other">(</span><span class="Identifier">table</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">;</span> <span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="arrays.html#ArrowChunkedArray"><span class="Identifier">ArrowChunkedArray</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+
+
+
+</dd>
 <a id="newArrowTableBuilder,ArrowSchema"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#newArrowTableBuilder%2CArrowSchema"><span class="Identifier">newArrowTableBuilder</span></a><span class="Other">(</span><span class="Identifier">schema</span><span class="Other">:</span> <a href="tables.html#ArrowSchema"><span class="Identifier">ArrowSchema</span></a><span class="Other">)</span><span class="Other">:</span> <a href="tables.html#ArrowTableBuilder"><span class="Identifier">ArrowTableBuilder</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
@@ -406,20 +441,49 @@ Add the next column to the builder, must be of the correct type specified in the
 Build the table, invalidating this builder.
 
 </dd>
+<a id="add,TypedBuilder[T],openArray[T]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#add%2CTypedBuilder%5BT%5D%2CopenArray%5BT%5D"><span class="Identifier">add</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">typedBuilder</span><span class="Other">:</span> <a href="tables.html#TypedBuilder"><span class="Identifier">TypedBuilder</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">ts</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+<dd>
+
+
+
+</dd>
 
 </dl></div>
 <div class="section" id="17">
 <h1><a class="toc-backref" href="#17">Macros</a></h1>
 <dl class="item">
-<a id="declareTypedTable.m,typed"></a>
-<dt><pre><span class="Keyword">macro</span> <a href="#declareTypedTable.m%2Ctyped"><span class="Identifier">declareTypedTable</span></a><span class="Other">(</span><span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typed</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<a id="registerTypedTable.m,typedesc"></a>
+<dt><pre><span class="Keyword">macro</span> <a href="#registerTypedTable.m%2Ctypedesc"><span class="Identifier">registerTypedTable</span></a><span class="Other">(</span><span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
 <dd>
 
-Macro which generates a TypedBuilder[T] for the given type. This generates a few procs to create a new builder, append a T to the table, and build the table.<blockquote><p><pre class="listing"><span class="Keyword">let</span> <span class="Identifier">typedBuilder</span> <span class="Operator">=</span> <span class="Identifier">newTypedBuilder</span><span class="Punctuation">(</span><span class="Identifier">TypeTag</span><span class="Punctuation">[</span><span class="Identifier">MyCustomType</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Punctuation">)</span>
-<span class="Identifier">typedBuilder</span><span class="Operator">.</span><span class="Identifier">add</span> <span class="Identifier">MyCustomType</span><span class="Punctuation">(</span><span class="Operator">...</span><span class="Punctuation">)</span>
-<span class="Identifier">typedBuilder</span><span class="Operator">.</span><span class="Identifier">add</span> <span class="Identifier">MyCustomType</span><span class="Punctuation">(</span><span class="Operator">...</span><span class="Punctuation">)</span>
-<span class="Keyword">let</span> <span class="Identifier">tbl</span> <span class="Operator">=</span> <span class="Identifier">typedBuilder</span><span class="Operator">.</span><span class="Identifier">build</span></pre></p></blockquote>
+Macro which registers a type to be used in the &quot;Typed&quot; API.
 
+</dd>
+
+</dl></div>
+<div class="section" id="18">
+<h1><a class="toc-backref" href="#18">Templates</a></h1>
+<dl class="item">
+<a id="newArrowTable.t,typedesc,openArray[typedesc]"></a>
+<dt><pre><span class="Keyword">template</span> <a href="#newArrowTable.t%2Ctypedesc%2CopenArray%5Btypedesc%5D"><span class="Identifier">newArrowTable</span></a><span class="Other">(</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">;</span> <span class="Identifier">ts</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">T:type</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="newTypedBuilder.t,typedesc"></a>
+<dt><pre><span class="Keyword">template</span> <a href="#newTypedBuilder.t%2Ctypedesc"><span class="Identifier">newTypedBuilder</span></a><span class="Other">(</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <a href="tables.html#TypedBuilder"><span class="Identifier">TypedBuilder</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="iter.t,ArrowTable,typedesc"></a>
+<dt><pre><span class="Keyword">template</span> <a href="#iter.t%2CArrowTable%2Ctypedesc"><span class="Identifier">iter</span></a><span class="Other">(</span><span class="Identifier">tbl</span><span class="Other">:</span> <a href="tables.html#ArrowTable"><span class="Identifier">ArrowTable</span></a><span class="Other">;</span> <span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dd>
+
+Iterate over the ArrowTable, converting rows into the type <tt class="docutils literal"><span class="pre">T</span></tt>.
 
 </dd>
 
@@ -432,7 +496,7 @@ Macro which generates a TypedBuilder[T] for the given type. This generates a few
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-05 05:27:34 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-08 21:05:38 UTC</small>
       </div>
     </div>
   </div>

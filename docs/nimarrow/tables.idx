@@ -5,7 +5,7 @@ ArrowTableBuilder	nimarrow/tables.html#ArrowTableBuilder	tables: ArrowTableBuild
 `=destroy`	nimarrow/tables.html#=destroy,ArrowFieldObj	tables: `=destroy`(x: var ArrowFieldObj)	
 `=destroy`	nimarrow/tables.html#=destroy,ArrowSchemaObj	tables: `=destroy`(x: var ArrowSchemaObj)	
 `=destroy`	nimarrow/tables.html#=destroy,ArrowTableObj	tables: `=destroy`(x: var ArrowTableObj)	
-newArrowField	nimarrow/tables.html#newArrowField,string,TypeTag[T]	tables: newArrowField[T](name: string; typeTag: TypeTag[T]): ArrowField	
+newArrowField	nimarrow/tables.html#newArrowField,string,typedesc	tables: newArrowField(name: string; T: typedesc): ArrowField	
 glibPtr	nimarrow/tables.html#glibPtr,ArrowField	tables: glibPtr(field: ArrowField): GArrowFieldPtr	
 newArrowSchema	nimarrow/tables.html#newArrowSchema,openArray[ArrowField]	tables: newArrowSchema(fields: openArray[ArrowField]): ArrowSchema	
 newArrowSchema	nimarrow/tables.html#newArrowSchema,GArrowSchemaPtr	tables: newArrowSchema(glibSchema: GArrowSchemaPtr): ArrowSchema	
@@ -16,8 +16,15 @@ len	nimarrow/tables.html#len,ArrowTable	tables: len(table: ArrowTable): uint64
 `$`	nimarrow/tables.html#$,ArrowTable	tables: `$`(table: ArrowTable): string	
 `==`	nimarrow/tables.html#==,ArrowTable,ArrowTable	tables: `==`(table, other: ArrowTable): bool	
 schema	nimarrow/tables.html#schema,ArrowTable	tables: schema(table: ArrowTable): ArrowSchema	
+col	nimarrow/tables.html#col,ArrowTable,typedesc,int	tables: col(table: ArrowTable; T: typedesc; i: int): ArrowChunkedArray[T]	
+col	nimarrow/tables.html#col,ArrowTable,typedesc,string	tables: col(table: ArrowTable; T: typedesc; name: string): ArrowChunkedArray[T]	
 newArrowTableBuilder	nimarrow/tables.html#newArrowTableBuilder,ArrowSchema	tables: newArrowTableBuilder(schema: ArrowSchema): ArrowTableBuilder	
 add	nimarrow/tables.html#add,ArrowTableBuilder,ArrowArray[T]	tables: add[T](b: ArrowTableBuilder; arr: ArrowArray[T])	
 build	nimarrow/tables.html#build,ArrowTableBuilder	tables: build(b: ArrowTableBuilder): ArrowTable	
 TypedBuilder	nimarrow/tables.html#TypedBuilder	tables: TypedBuilder	
-declareTypedTable	nimarrow/tables.html#declareTypedTable.m,typed	tables: declareTypedTable(typ: typed): untyped	
+TypeRegistered	nimarrow/tables.html#TypeRegistered	tables: TypeRegistered	
+newArrowTable	nimarrow/tables.html#newArrowTable.t,typedesc,openArray[typedesc]	tables: newArrowTable(T: typedesc; ts: openArray[T:type]): ArrowTable	
+add	nimarrow/tables.html#add,TypedBuilder[T],openArray[T]	tables: add[T](typedBuilder: TypedBuilder[T]; ts: openArray[T])	
+registerTypedTable	nimarrow/tables.html#registerTypedTable.m,typedesc	tables: registerTypedTable(typ: typedesc): untyped	
+newTypedBuilder	nimarrow/tables.html#newTypedBuilder.t,typedesc	tables: newTypedBuilder(T: typedesc): TypedBuilder[T]	
+iter	nimarrow/tables.html#iter.t,ArrowTable,typedesc	tables: iter(tbl: ArrowTable; T: typedesc): untyped	
